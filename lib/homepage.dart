@@ -158,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Positioned(
                       top: 30,
-                      right: 240,
+                      right: 65,
                       child: const Icon(
                         Icons.check_circle,
                         color: Colors.white,
@@ -202,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     width: MediaQuery.of(context).size.width / 2.5,
                     height: 150,
-                    color: Colors.blue,
+                    color: Colors.lightBlue,
                     child: const Center(
                       child: Text(
                         'Report',
@@ -242,7 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Positioned(
                       top: 30,
-                      right: 240,
+                      right: 65,
                       child: const Icon(
                         Icons.article,
                         color: Colors.white,
