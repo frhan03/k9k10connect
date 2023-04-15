@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const Homepage());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Homepage extends StatelessWidget {
+  const Homepage({super.key});
 
   // This widget is the root of your application.
   @override
@@ -14,15 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
+
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -33,15 +25,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -49,53 +32,107 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            // handle menu button press
-          },
+
+        centerTitle: true,
+        title: const Text(
+            'Navigation Drawer'
         ),
-        title: Center(
-          child: Text(
-            'Home',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20.0,
-            ),
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              // handle notification button press
-            },
-          ),
-        ],
+        backgroundColor: Colors.brown,
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const UserAccountsDrawerHeader(
+
+
+              decoration: BoxDecoration(
+                color: Colors.brown),
+
+              accountName: Text(
+                "Nur Amirah",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              accountEmail: Text(
+                "nuramirah123@utm.my",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              currentAccountPicture: FlutterLogo(),
+            ),
+
+            ListTile(
+              leading: Icon(
+                Icons.home,
+              ),
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.person,
+              ),
+              title: const Text('Profile'),
+              onTap: () {
+
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.pending_actions,
+              ),
+              title: const Text('Status'),
+              onTap: () {
+
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.warning,
+              ),
+              title: const Text('Report'),
+              onTap: () {
+
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.article,
+              ),
+              title: const Text('News'),
+              onTap: () {
+
+              },
+            ),
+            // Expanded(
+            //     child: Container(
+            //       padding: EdgeInsets.symmetric(vertical: 150.0),
+            //     )),
+            // Column(
+            //   children: <Widget>[
+            //     _createFooterItem(
+            //         icon: Icons.logout,
+            //         text: 'Logout',
+            //         onTap: () => Navigator.pushReplacementNamed(context, '/'))
+            //   ],
+            // ),
+          ],
+        ),
+      ),
+
+
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -160,7 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       top: 30,
                       right: 65,
                       child: const Icon(
-                        Icons.check_circle,
+                        Icons.pending_actions,
                         color: Colors.white,
                         size: 30,
                       ),
@@ -281,3 +318,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
+
+
