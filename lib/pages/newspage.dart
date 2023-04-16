@@ -37,7 +37,6 @@ class NewsPage extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            leading: Image(image: AssetImage('assets/Screenshot (1).png')),
             title: Text("Make sure to clean your room"),
             textColor: Colors.black,
             subtitle: Text("23/1/2023"),
