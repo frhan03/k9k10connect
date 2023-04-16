@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/pages/profile.dart';
 
 void main() {
   runApp(const Homepage());
@@ -42,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         centerTitle: true,
         title: const Text(
-            'Navigation Drawer'
+            'Homepage'
         ),
         backgroundColor: Colors.brown,
       ),
@@ -86,6 +87,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               title: const Text('Profile'),
               onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const UserProfilePage()),
+                );
 
               },
             ),
