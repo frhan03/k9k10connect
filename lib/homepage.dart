@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'pages/profile.dart';
+import 'pages/newspage.dart';
 
 void main() {
   runApp(const Homepage());
@@ -14,9 +16,10 @@ class Homepage extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-
-        primarySwatch: Colors.blue,
-      ),
+          // colorSchemeSeed: Color(0xff6750a4),
+          useMaterial3: true
+          // primarySwatch: Colors.blue,
+          ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -32,18 +35,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         centerTitle: true,
-        title: const Text(
-            'Navigation Drawer'
-        ),
+        title: const Text('Navigation Drawer'),
         backgroundColor: Colors.brown,
       ),
       drawer: Drawer(
@@ -51,11 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.zero,
           children: [
             const UserAccountsDrawerHeader(
-
-
-              decoration: BoxDecoration(
-                color: Colors.brown),
-
+              decoration: BoxDecoration(color: Colors.brown),
               accountName: Text(
                 "Nur Amirah",
                 style: TextStyle(
@@ -86,7 +79,11 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               title: const Text('Profile'),
               onTap: () {
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const UserProfilePage()),
+                );
               },
             ),
             ListTile(
@@ -94,18 +91,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 Icons.pending_actions,
               ),
               title: const Text('Status'),
-              onTap: () {
-
-              },
+              onTap: () {},
             ),
             ListTile(
               leading: Icon(
                 Icons.warning,
               ),
               title: const Text('Report'),
-              onTap: () {
-
-              },
+              onTap: () {},
             ),
             ListTile(
               leading: Icon(
@@ -113,7 +106,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               title: const Text('News'),
               onTap: () {
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NewsPage()),
+                );
               },
             ),
             // Expanded(
@@ -131,8 +127,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-
-
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -318,7 +312,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-
-
-
