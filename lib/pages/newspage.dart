@@ -3,32 +3,11 @@ import 'package:flutter/material.dart';
 class NewsPage extends StatelessWidget {
   const NewsPage({Key? key}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: buildAppBar(), body: buildContainer());
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: Icon(Icons.menu),
-        color: Colors.black,
-        onPressed: () {},
-      ),
-      title: Text('News'),
-      centerTitle: true,
-      titleTextStyle:
-          TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.search),
-          color: Colors.black,
-          onPressed: () {},
-        )
-      ],
-    );
+    return Scaffold(
+        appBar: buildAppBar(), body: buildContainer());
   }
 
   Container buildContainer() {
@@ -37,13 +16,6 @@ class NewsPage extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            title: Text("Make sure to clean your room"),
-            textColor: Colors.black,
-            subtitle: Text("23/1/2023"),
-            tileColor: Colors.grey[300],
-          ),
-          Divider(),
-          ListTile(
             leading: Image(image: AssetImage('assets/Screenshot (1).png')),
             title: Text("Maintenance is coming"),
             textColor: Colors.black,
@@ -74,12 +46,18 @@ class NewsPage extends StatelessWidget {
             subtitle: Text("21/1/2023"),
             tileColor: Colors.grey[300],
           ),
-          //Image: image(AssetImage('Screenshot (1).png')),
-          //Text("Make sure to clean your room\n"),
-          //Subtitle("23/1/2023"),
         ],
       ),
-      //decoration: BoxDecoration(color: Colors.blueGrey),
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      centerTitle: true,
+      title: Text('News'),
+      actions: <Widget>[
+        IconButton(onPressed: null, icon: Icon(Icons.notifications)),
+      ],
     );
   }
 }

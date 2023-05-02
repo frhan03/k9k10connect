@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/pages/createnews.dart';
 import 'pages/profile.dart';
 import 'pages/newspage.dart';
 
@@ -98,7 +99,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 Icons.warning,
               ),
               title: const Text('Report'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CreateNews()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(

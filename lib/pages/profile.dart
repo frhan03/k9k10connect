@@ -70,7 +70,6 @@ void _doNothing() {}
 
 AppBar _buildAppBar() {
   return AppBar(
-    leading: Icon(Icons.menu),
     centerTitle: true,
     title: Text('Profile'),
     actions: <Widget>[
