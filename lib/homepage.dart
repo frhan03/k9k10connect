@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:k9k10connect/pages/createnews.dart';
 import 'pages/profile.dart';
 import 'pages/newspage.dart';
+import 'pages/status_staff.dart';
 
 void main() {
   runApp(const Homepage());
@@ -92,7 +93,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 Icons.pending_actions,
               ),
               title: const Text('Status'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const StatusStaffPage()),
+                  );
+              },
             ),
             ListTile(
               leading: Icon(
