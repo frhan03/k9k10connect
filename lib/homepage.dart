@@ -3,6 +3,7 @@ import 'package:k9k10connect/pages/createnews.dart';
 import 'pages/profile.dart';
 import 'pages/newspage.dart';
 import 'pages/status_staff.dart';
+import 'pages/report.dart';
 
 void main() {
   runApp(const Homepage());
@@ -95,9 +96,10 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('Status'),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const StatusStaffPage()),
-                  );
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const StatusStaffPage()),
+                );
               },
             ),
             ListTile(
@@ -106,10 +108,23 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               title: const Text('Report'),
               onTap: () {
+                bool isReportScreen = true; // set this flag based on your logic
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CreateNews()),
+                    builder: (context) {
+                      return Builder(
+                        builder: (context) {
+                          if (isReportScreen) {
+                            return const report();
+                          } else {
+                            return const CreateNews();
+                          }
+                        },
+                      );
+                    },
+                  ),
                 );
               },
             ),
