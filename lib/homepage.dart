@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:k9k10connect/pages/createnews.dart';
+import 'package:k9k10connect/pages/report.dart';
+import 'package:k9k10connect/pages/status.dart';
 import 'pages/profile.dart';
 import 'pages/newspage.dart';
 
@@ -41,8 +42,16 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Navigation Drawer'),
+        title: const Text(
+            'Homepage',
+        ),
         backgroundColor: Colors.brown,
+        actions: <Widget>[
+          IconButton(onPressed: (){
+
+
+          }, icon: Icon(Icons.exit_to_app)),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -92,7 +101,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 Icons.pending_actions,
               ),
               title: const Text('Status'),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const StatusPage()),
+                );
+
+              },
             ),
             ListTile(
               leading: Icon(
@@ -103,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CreateNews()),
+                      builder: (context) => const report()),
                 );
               },
             ),

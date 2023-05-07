@@ -67,7 +67,9 @@ class CreateNews extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [OutlinedButton.icon(
-              onPressed: (){},
+              onPressed: (){
+
+              },
               icon: Icon(
                 color: Colors.brown,
                 Icons.upload_file,
@@ -86,16 +88,18 @@ class CreateNews extends StatelessWidget {
             padding: const EdgeInsets.only(left: 300),
             child: ElevatedButton(
                 onPressed: () {},
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                        "POST"),
-                    SizedBox(
-                      width: 10,
-                    ),
-                  ],
-                )
+              child: Text('POST'),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.deepOrange[100],
+                onPrimary: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.only(
+                  left: 30.0,
+                  right: 30.0,
+                ),
+              ),
             ),
           )
         ],

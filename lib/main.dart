@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/homepage.dart';
+import 'package:k9k10connect/staffhomepage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,7 +59,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (context) => const Homepage()),
                   );
                 },
-                child: const Text('Homepage')
+                child: const Text('User')
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const StaffHomepage()),
+                  );
+                },
+                child: const Text('Staff')
             ),
           ],
         ),
