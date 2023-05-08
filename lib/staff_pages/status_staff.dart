@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:k9k10connect/drawer.dart';
 
 class StatusStaffPage extends StatelessWidget{
   const StatusStaffPage({super.key});
@@ -37,6 +38,7 @@ class _MyStatusPageState extends State<MyStatusPage>{
   Widget build(BuildContext context){
     return Scaffold(
       appBar: _buildAppBar(),
+      drawer: MyDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,

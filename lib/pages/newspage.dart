@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/drawer.dart';
 
 class NewsPage extends StatelessWidget {
   const NewsPage({Key? key}) : super(key: key);
@@ -7,7 +8,9 @@ class NewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: buildAppBar(), body: buildContainer());
+        appBar: buildAppBar(), body: buildContainer(),
+        drawer: MyDrawer(),
+      );
   }
 
   Container buildContainer() {

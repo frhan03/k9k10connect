@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:k9k10connect/pages/report.dart';
-import 'package:k9k10connect/pages/status.dart';
-import 'pages/profile.dart';
-import 'pages/newspage.dart';
+import 'package:k9k10connect/drawer.dart';
+// import 'package:k9k10connect/pages/report.dart';
+// import 'package:k9k10connect/pages/status.dart';
+// import 'pages/profile.dart';
+// import 'pages/newspage.dart';
 
 void main() {
   runApp(const Homepage());
@@ -18,7 +19,7 @@ class Homepage extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-          // colorSchemeSeed: Color(0xff6750a4),
+          colorSchemeSeed: Color(0xff6750a4),
           useMaterial3: true
           // primarySwatch: Colors.blue,
           ),
@@ -42,113 +43,114 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Navigation Drawer'),
-        backgroundColor: Colors.brown,
+        title: const Text('Home'),
+        //backgroundColor: Colors.brown,
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.brown),
-              accountName: Text(
-                "Nur Amirah",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              accountEmail: Text(
-                "nuramirah123@utm.my",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              currentAccountPicture: FlutterLogo(),
-            ),
+      drawer: MyDrawer(),
+      // Drawer(
+      //   child: ListView(
+      //     padding: EdgeInsets.zero,
+      //     children: [
+      //       const UserAccountsDrawerHeader(
+      //         decoration: BoxDecoration(color: Color.fromARGB(255, 211, 214, 227),),
+      //         accountName: Text(
+      //           "Nur Amirah",
+      //           style: TextStyle(
+      //             fontWeight: FontWeight.bold,
+      //           ),
+      //         ),
+      //         accountEmail: Text(
+      //           "nuramirah123@utm.my",
+      //           style: TextStyle(
+      //             fontWeight: FontWeight.bold,
+      //           ),
+      //         ),
+      //         currentAccountPicture: FlutterLogo(),
+      //       ),
 
-            ListTile(
-              leading: Icon(
-                Icons.home,
-              ),
-              title: const Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.person,
-              ),
-              title: const Text('Profile'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const UserProfilePage()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.pending_actions,
-              ),
-              title: const Text('Status'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const StatusPage()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.warning,
-              ),
-              title: const Text('Report'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const report()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.article,
-              ),
-              title: const Text('News'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const NewsPage()),
-                );
-              },
-            ),
-            // Expanded(
-            //     child: Container(
-            //       padding: EdgeInsets.symmetric(vertical: 150.0),
-            //     )),
-            // Column(
-            //   children: <Widget>[
-            //     _createFooterItem(
-            //         icon: Icons.logout,
-            //         text: 'Logout',
-            //         onTap: () => Navigator.pushReplacementNamed(context, '/'))
-            //   ],
-            // ),
-          ],
-        ),
-      ),
+      //       ListTile(
+      //         leading: Icon(
+      //           Icons.home,
+      //         ),
+      //         title: const Text('Home'),
+      //         onTap: () {
+      //           Navigator.pop(context);
+      //         },
+      //       ),
+      //       ListTile(
+      //         leading: Icon(
+      //           Icons.person,
+      //         ),
+      //         title: const Text('Profile'),
+      //         onTap: () {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(
+      //                 builder: (context) => const UserProfilePage()),
+      //           );
+      //         },
+      //       ),
+      //       ListTile(
+      //         leading: Icon(
+      //           Icons.pending_actions,
+      //         ),
+      //         title: const Text('Status'),
+      //         onTap: () {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(
+      //                 builder: (context) => const StatusPage()),
+      //           );
+      //         },
+      //       ),
+      //       ListTile(
+      //         leading: Icon(
+      //           Icons.warning,
+      //         ),
+      //         title: const Text('Report'),
+      //         onTap: () {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(
+      //                 builder: (context) => const report()),
+      //           );
+      //         },
+      //       ),
+      //       ListTile(
+      //         leading: Icon(
+      //           Icons.article,
+      //         ),
+      //         title: const Text('News'),
+      //         onTap: () {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => const NewsPage()),
+      //           );
+      //         },
+      //       ),
+      //       // Expanded(
+      //       //     child: Container(
+      //       //       padding: EdgeInsets.symmetric(vertical: 150.0),
+      //       //     )),
+      //       // Column(
+      //       //   children: <Widget>[
+      //       //     _createFooterItem(
+      //       //         icon: Icons.logout,
+      //       //         text: 'Logout',
+      //       //         onTap: () => Navigator.pushReplacementNamed(context, '/'))
+      //       //   ],
+      //       // ),
+      //     ],
+      //   ),
+      // ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Center(
             child: Text(
-              'Hello! Nur Amirah',
+              'Hello! \nNur Amirah',
               style: TextStyle(
-                fontSize: 40,
+                fontSize: 65,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -163,13 +165,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     width: MediaQuery.of(context).size.width / 2.5,
                     height: 150,
-                    color: Colors.red,
+                    color: Color.fromARGB(255, 211, 214, 227),   
                     child: const Center(
                       child: Text(
                         'Profile',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          //color: Colors.white,
+                          //fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -178,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     top: 0,
                     right: 0,
                     child: IconButton(
-                      color: Colors.white,
+                      // color: Colors.white,
                       icon: const Icon(Icons.more_vert),
                       onPressed: () {
 // handle menu button press
@@ -189,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     top: 30,
                     child: const Icon(
                       Icons.person,
-                      color: Colors.white,
+                      // color: Colors.white,
                       size: 30,
                     ),
                   ),
@@ -198,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 width: MediaQuery.of(context).size.width / 2.5,
                 height: 150,
-                color: Colors.green,
+                color: Color.fromARGB(255, 201, 203, 187),
                 child: Stack(
                   children: [
                     Positioned(
@@ -206,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       right: 65,
                       child: const Icon(
                         Icons.pending_actions,
-                        color: Colors.white,
+                        // color: Colors.white,
                         size: 30,
                       ),
                     ),
@@ -215,8 +218,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text(
                           'Status',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            //color: Colors.white,
+                           // fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -225,7 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       top: 0,
                       right: 0,
                       child: IconButton(
-                        color: Colors.white,
+                        // color: Colors.white,
                         icon: const Icon(Icons.more_vert),
                         onPressed: () {
 // handle menu button press
@@ -247,13 +251,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     width: MediaQuery.of(context).size.width / 2.5,
                     height: 150,
-                    color: Colors.lightBlue,
+                    color: Color.fromARGB(255, 232, 208, 180),
                     child: const Center(
                       child: Text(
                         'Report',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          //color: Colors.white,
+                          //fontWeight: FontWeight.bold,
+                          fontSize: 20,
                         ),
                       ),
                     ),
@@ -262,7 +267,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     top: 0,
                     right: 0,
                     child: IconButton(
-                      color: Colors.white,
+                      // color: Colors.white,
                       icon: const Icon(Icons.more_vert),
                       onPressed: () {
 // handle menu button press
@@ -273,7 +278,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     top: 30,
                     child: const Icon(
                       Icons.report,
-                      color: Colors.white,
+                      // color: Colors.white,
                       size: 30,
                     ),
                   ),
@@ -282,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 width: MediaQuery.of(context).size.width / 2.5,
                 height: 150,
-                color: Colors.grey,
+                color: Color.fromARGB(255, 71, 18, 42),
                 child: Stack(
                   children: [
                     Positioned(
@@ -290,7 +295,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       right: 65,
                       child: const Icon(
                         Icons.article,
-                        color: Colors.white,
+                        color: Color.fromARGB(255, 201, 203, 187),
                         size: 30,
                       ),
                     ),
@@ -299,8 +304,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text(
                           'News',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 201, 203, 187),
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 20,
                           ),
                         ),
                       ),
@@ -309,7 +315,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       top: 0,
                       right: 0,
                       child: IconButton(
-                        color: Colors.white,
+                        color: Color.fromARGB(255, 201, 203, 187),
                         icon: const Icon(Icons.more_vert),
                         onPressed: () {
 // handle menu button press

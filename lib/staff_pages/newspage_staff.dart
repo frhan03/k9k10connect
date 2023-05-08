@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/drawer.dart';
 
 
 class NewsStaffPage extends StatelessWidget {
@@ -9,6 +10,7 @@ class NewsStaffPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
+      drawer: MyDrawer(),
       body: buildContainer(),
     );
   }
@@ -36,6 +38,7 @@ class NewsStaffPage extends StatelessWidget {
         ),
       ],
     );
+
   }
 
   Container buildContainer() {

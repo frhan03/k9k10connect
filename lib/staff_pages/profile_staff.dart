@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/drawer.dart';
 
 class StaffProfilePage extends StatelessWidget {
   const StaffProfilePage({Key? key}) : super(key: key);
@@ -7,6 +8,7 @@ class StaffProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
+      drawer: MyDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,

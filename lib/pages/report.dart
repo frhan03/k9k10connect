@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/drawer.dart';
 
 class report extends StatefulWidget {
   const report({Key? key}) : super(key: key);
@@ -38,6 +39,7 @@ class _reportState extends State<report> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
+      drawer: MyDrawer(),
       body: ListView(
         padding: EdgeInsets.all(16.0),
         children: [

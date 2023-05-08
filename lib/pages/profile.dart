@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/drawer.dart';
 
 class UserProfilePage extends StatelessWidget {
   const UserProfilePage({Key? key}) : super(key: key);
@@ -7,6 +8,7 @@ class UserProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
+      drawer: MyDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -71,6 +73,14 @@ void _doNothing() {}
 AppBar _buildAppBar() {
   return AppBar(
     centerTitle: true,
+    // leading: IconButton(
+    // icon: Icon(Icons.menu),
+    // onPressed: (){             
+    //   MaterialPageRoute(
+    //       builder: (context) => const Drawer());
+
+    //   },
+    // ),
     title: Text('Profile'),
     actions: <Widget>[
       IconButton(onPressed: _doNothing, icon: Icon(Icons.notifications)),

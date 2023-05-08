@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/drawer.dart';
 
 class StatusPage extends StatelessWidget {
   const StatusPage({Key? key}) : super(key: key);
@@ -10,6 +11,7 @@ class StatusPage extends StatelessWidget {
     return Scaffold(
       appBar: buildAppBar(),
       body: buildContainer(),
+      drawer: MyDrawer(),
     );
   }
 
