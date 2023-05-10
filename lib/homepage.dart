@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/drawer.dart';
-// import 'package:k9k10connect/pages/report.dart';
-// import 'package:k9k10connect/pages/status.dart';
-// import 'pages/profile.dart';
-// import 'pages/newspage.dart';
+
 
 void main() {
   runApp(const Homepage());

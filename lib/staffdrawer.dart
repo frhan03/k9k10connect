@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/pages/report.dart';
-import 'package:k9k10connect/pages/status.dart';
-import 'package:k9k10connect/homepage.dart';
+import 'package:k9k10connect/staff_pages/newspage_staff.dart';
+import 'package:k9k10connect/staff_pages/status_staff.dart';
+import 'package:k9k10connect/staffhomepage.dart';
 import 'pages/profile.dart';
-import 'pages/newspage.dart';
 
-class MyDrawer extends StatelessWidget{
-  const MyDrawer({Key? key}) : super(key: key);
+class MyStaffDrawer extends StatelessWidget{
+  const MyStaffDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +17,13 @@ class MyDrawer extends StatelessWidget{
           const UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: Colors.grey,),
             accountName: Text(
-              "Nur Amirah",
+              "Shila",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             accountEmail: Text(
-              "nuramirah123@utm.my",
+              "Shila@utm.my",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -40,7 +40,7 @@ class MyDrawer extends StatelessWidget{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const Homepage()),
+                    builder: (context) => const StaffHomepage()),
               );
             },
           ),
@@ -66,7 +66,7 @@ class MyDrawer extends StatelessWidget{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const StatusPage()),
+                    builder: (context) => const StatusStaffPage()),
               );
             },
           ),
@@ -91,7 +91,8 @@ class MyDrawer extends StatelessWidget{
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const NewsPage()),
+                MaterialPageRoute(
+                    builder: (context) => const NewsStaffPage()),
               );
             },
           ),

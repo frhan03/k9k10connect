@@ -8,7 +8,8 @@ class NewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: buildAppBar(), body: buildContainer(),
+        appBar: buildAppBar(),
+        body: buildContainer(),
         drawer: MyDrawer(),
       );
   }
@@ -19,7 +20,7 @@ class NewsPage extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            leading: Image(image: AssetImage('assets/Screenshot (1).png')),
+            leading: Image.asset('assets/Screenshot1.png'),
             title: Text("Maintenance is coming"),
             textColor: Colors.black,
             subtitle: Text("21/1/2023"),
@@ -27,7 +28,7 @@ class NewsPage extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Image(image: AssetImage('assets/Screenshot (1).png')),
+            leading: Image.asset('assets/Screenshot1.png'),
             title: Text("Maintenance is coming"),
             textColor: Colors.black,
             subtitle: Text("21/1/2023"),
@@ -35,7 +36,7 @@ class NewsPage extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Image(image: AssetImage('assets/Screenshot (1).png')),
+            leading: Image.asset('assets/Screenshot1.png'),
             title: Text("Make sure to clean your room"),
             textColor: Colors.black,
             subtitle: Text("23/1/2023"),
@@ -43,7 +44,7 @@ class NewsPage extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Image(image: AssetImage('assets/Screenshot (1).png')),
+            leading: Image.asset('assets/Screenshot1.png'),
             title: Text("Maintenance is coming"),
             textColor: Colors.black,
             subtitle: Text("21/1/2023"),

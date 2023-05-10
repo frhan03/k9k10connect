@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/drawer.dart';
 
+import '../staffdrawer.dart';
+
 
 class NewsStaffPage extends StatelessWidget {
   const NewsStaffPage({Key? key}) : super(key: key);
@@ -10,7 +12,7 @@ class NewsStaffPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      drawer: MyDrawer(),
+      drawer: MyStaffDrawer(),
       body: buildContainer(),
     );
   }
@@ -58,7 +60,7 @@ class NewsStaffPage extends StatelessWidget {
           ),
 
           ListTile(
-            leading: Image(image: AssetImage('assets/Screenshot (1).png')),
+            leading: Image.asset('assets/Screenshot1.png'),
             title: Text("Make sure to clean your room"),
             textColor: Colors.black,
             subtitle: Text("23/1/2023"),
@@ -66,7 +68,7 @@ class NewsStaffPage extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Image(image: AssetImage('assets/Screenshot (1).png')),
+            leading: Image.asset('assets/Screenshot1.png'),
             title: Text("Maintenance is coming"),
             textColor: Colors.black,
             subtitle: Text("21/1/2023"),
@@ -74,7 +76,7 @@ class NewsStaffPage extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Image(image: AssetImage('assets/Screenshot (1).png')),
+            leading: Image.asset('assets/Screenshot1.png'),
             title: Text("Maintenance is coming"),
             textColor: Colors.black,
             subtitle: Text("21/1/2023"),
@@ -82,7 +84,7 @@ class NewsStaffPage extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Image(image: AssetImage('assets/Screenshot (1).png')),
+            leading: Image.asset('assets/Screenshot1.png'),
             title: Text("Make sure to clean your room"),
             textColor: Colors.black,
             subtitle: Text("23/1/2023"),
@@ -90,7 +92,7 @@ class NewsStaffPage extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Image(image: AssetImage('assets/Screenshot (1).png')),
+            leading: Image.asset('assets/Screenshot1.png'),
             title: Text("Maintenance is coming"),
             textColor: Colors.black,
             subtitle: Text("21/1/2023"),
