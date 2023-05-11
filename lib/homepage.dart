@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:k9k10connect/drawer.dart';
 
 
-void main() {
-  runApp(const Homepage());
-}
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});

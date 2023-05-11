@@ -20,7 +20,7 @@ class NewsPage extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            leading: Image.asset('assets/Screenshot1.png'),
+            leading: Image.asset('assets/images/Screenshot1.png'),
             title: Text("Maintenance is coming"),
             textColor: Colors.black,
             subtitle: Text("21/1/2023"),
@@ -28,7 +28,7 @@ class NewsPage extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Image.asset('assets/Screenshot1.png'),
+            leading: Image.asset('assets/images/Screenshot1.png'),
             title: Text("Maintenance is coming"),
             textColor: Colors.black,
             subtitle: Text("21/1/2023"),
@@ -36,7 +36,7 @@ class NewsPage extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Image.asset('assets/Screenshot1.png'),
+            leading: Image.asset('assets/images/Screenshot1.png'),
             title: Text("Make sure to clean your room"),
             textColor: Colors.black,
             subtitle: Text("23/1/2023"),
@@ -44,7 +44,7 @@ class NewsPage extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Image.asset('assets/Screenshot1.png'),
+            leading: Image.asset('assets/images/Screenshot1.png'),
             title: Text("Maintenance is coming"),
             textColor: Colors.black,
             subtitle: Text("21/1/2023"),
