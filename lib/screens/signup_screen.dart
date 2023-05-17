@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../homepage.dart';
 import '../reusable/reusable_widgets.dart';
@@ -32,9 +33,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-              hexStringToColor("CB2B93"),
-              hexStringToColor("9546C4"),
-              hexStringToColor("5E61F4")
+            // hexStringToColor("CB2B93"),
+            // hexStringToColor("9546C4"),
+            // hexStringToColor("5E61F4")
+            hexStringToColor("D2D7DF"),
+            hexStringToColor("BDBBB0"),
+            hexStringToColor("D8BFAA")
             ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         child: SingleChildScrollView(
             child: Padding(
@@ -62,11 +66,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 signInSignUpButton
                   (context,
                     false, (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Homepage()),
-                      );
+                      FirebaseAuth.instance
+                        .createUserWithEmailAndPassword(
+                          email: _emailTextController.text, 
+                          password: _passwordTextController.text)
+                        .then((value) {
+                          Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context) => const Homepage()));
+                        }).onError((error, stackTrace){
+                          print("Error ${error.toString()}");
+                        });  
                 })
                 ],
               ),
