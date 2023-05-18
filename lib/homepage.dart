@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/drawer.dart';
 import 'package:k9k10connect/screens/signin_screen.dart';
-
-
+import 'package:k9k10connect/pages/report.dart';
+import 'package:k9k10connect/pages/newspage.dart';
+import 'package:k9k10connect/pages/profile.dart';
+import 'package:k9k10connect/pages/status.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -14,9 +16,7 @@ class Homepage extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-          colorSchemeSeed: Color(0xff6750a4),
-          useMaterial3: true
+      theme: ThemeData(colorSchemeSeed: Color(0xff6750a4), useMaterial3: true
           // primarySwatch: Colors.blue,
           ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -43,13 +43,11 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () => FirebaseAuth.instance.signOut().then((value){
+            onPressed: () => FirebaseAuth.instance.signOut().then((value) {
               print("Signed out");
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const SignInScreen()
-                ),
+                MaterialPageRoute(builder: (context) => const SignInScreen()),
               );
             }),
           ),
@@ -78,35 +76,30 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     width: MediaQuery.of(context).size.width / 2.5,
                     height: 150,
-                    color: Color.fromARGB(255, 211, 214, 227),   
+                    color: Colors.red,
                     child: const Center(
                       child: Text(
                         'Profile',
                         style: TextStyle(
-                          fontSize: 20,
-                          //color: Colors.white,
-                          //fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
                   Positioned(
-                    top: 0,
-                    right: 0,
+                    top: 30,
                     child: IconButton(
-                      // color: Colors.white,
-                      icon: const Icon(Icons.more_vert),
+                      icon: const Icon(Icons.person),
+                      color: Colors.white,
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const UserProfilePage()),
+                        );
 // handle menu button press
                       },
-                    ),
-                  ),
-                  Positioned(
-                    top: 30,
-                    child: const Icon(
-                      Icons.person,
-                      // color: Colors.white,
-                      size: 30,
                     ),
                   ),
                 ],
@@ -114,16 +107,23 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 width: MediaQuery.of(context).size.width / 2.5,
                 height: 150,
-                color: Color.fromARGB(255, 201, 203, 187),
+                color: Colors.green,
                 child: Stack(
                   children: [
                     Positioned(
                       top: 30,
                       right: 65,
-                      child: const Icon(
-                        Icons.pending_actions,
-                        // color: Colors.white,
-                        size: 30,
+                      child: IconButton(
+                        icon: const Icon(Icons.pending_actions),
+                        color: Colors.white,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const StatusPage()),
+                          );
+// handle menu button press
+                        },
                       ),
                     ),
                     const Positioned(
@@ -131,22 +131,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text(
                           'Status',
                           style: TextStyle(
-                            fontSize: 20,
-                            //color: Colors.white,
-                           // fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: IconButton(
-                        // color: Colors.white,
-                        icon: const Icon(Icons.more_vert),
-                        onPressed: () {
-// handle menu button press
-                        },
                       ),
                     ),
                   ],
@@ -164,35 +152,30 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     width: MediaQuery.of(context).size.width / 2.5,
                     height: 150,
-                    color: Color.fromARGB(255, 232, 208, 180),
+                    color: Colors.lightBlue,
                     child: const Center(
                       child: Text(
                         'Report',
                         style: TextStyle(
-                          //color: Colors.white,
-                          //fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
                   Positioned(
-                    top: 0,
-                    right: 0,
+                    top: 30,
                     child: IconButton(
-                      // color: Colors.white,
-                      icon: const Icon(Icons.more_vert),
+                      icon: const Icon(Icons.report),
+                      color: Colors.white,
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const report()),
+                        );
 // handle menu button press
                       },
-                    ),
-                  ),
-                  Positioned(
-                    top: 30,
-                    child: const Icon(
-                      Icons.report,
-                      // color: Colors.white,
-                      size: 30,
                     ),
                   ),
                 ],
@@ -200,16 +183,26 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 width: MediaQuery.of(context).size.width / 2.5,
                 height: 150,
-                color: Color.fromARGB(255, 71, 18, 42),
+                color: Colors.grey,
                 child: Stack(
                   children: [
                     Positioned(
                       top: 30,
                       right: 65,
-                      child: const Icon(
-                        Icons.article,
+                      child: IconButton(
+                        icon: const Icon(Icons.article),
                         color: Color.fromARGB(255, 201, 203, 187),
-                        size: 30,
+
+                        // color: Colors.white,
+
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const NewsPage()),
+                          );
+// handle menu button press
+                        },
                       ),
                     ),
                     const Positioned(
@@ -217,22 +210,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text(
                           'News',
                           style: TextStyle(
-                            color: Color.fromARGB(255, 201, 203, 187),
-                            // fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: IconButton(
-                        color: Color.fromARGB(255, 201, 203, 187),
-                        icon: const Icon(Icons.more_vert),
-                        onPressed: () {
-// handle menu button press
-                        },
                       ),
                     ),
                   ],
