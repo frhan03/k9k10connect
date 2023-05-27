@@ -76,13 +76,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     width: MediaQuery.of(context).size.width / 2.5,
                     height: 150,
-                    color: Colors.red,
+                    color: Color.fromARGB(255, 211, 214, 227),   
                     child: const Center(
                       child: Text(
                         'Profile',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          // color: Colors.white,
+                          // fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -91,7 +92,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     top: 30,
                     child: IconButton(
                       icon: const Icon(Icons.person),
-                      color: Colors.white,
+                      iconSize: 30,
+                      // color: Colors.white,
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -107,15 +109,17 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 width: MediaQuery.of(context).size.width / 2.5,
                 height: 150,
-                color: Colors.green,
+                // color: Colors.green,
+                color: Color.fromARGB(255, 201, 203, 187),
                 child: Stack(
                   children: [
                     Positioned(
                       top: 30,
-                      right: 65,
+                      right: 55,
                       child: IconButton(
                         icon: const Icon(Icons.pending_actions),
-                        color: Colors.white,
+                        // color: Colors.white,
+                        iconSize: 30,
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -131,8 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text(
                           'Status',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            //color: Colors.white,
+                           // fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -152,13 +157,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     width: MediaQuery.of(context).size.width / 2.5,
                     height: 150,
-                    color: Colors.lightBlue,
+                    // color: Colors.lightBlue,
+                    color: Color.fromARGB(255, 232, 208, 180),
                     child: const Center(
                       child: Text(
                         'Report',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          //color: Colors.white,
+                          //fontWeight: FontWeight.bold,
+                          fontSize: 20,
                         ),
                       ),
                     ),
@@ -167,7 +174,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     top: 30,
                     child: IconButton(
                       icon: const Icon(Icons.report),
-                      color: Colors.white,
+                      // color: Colors.white,
+                      iconSize: 30,
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -183,12 +191,13 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 width: MediaQuery.of(context).size.width / 2.5,
                 height: 150,
-                color: Colors.grey,
+                // color: Colors.grey,
+                color: Color.fromARGB(255, 71, 18, 42),
                 child: Stack(
                   children: [
                     Positioned(
                       top: 30,
-                      right: 65,
+                      right: 55,
                       child: IconButton(
                         icon: const Icon(Icons.article),
                         color: Color.fromARGB(255, 201, 203, 187),
@@ -210,8 +219,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text(
                           'News',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 201, 203, 187),
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 20,
                           ),
                         ),
                       ),
