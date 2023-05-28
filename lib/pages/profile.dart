@@ -2,10 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:k9k10connect/drawer.dart';
 
-class UserProfilePage extends StatelessWidget {
+class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
 
   @override
+  _UserProfilePageState createState() => _UserProfilePageState();
+}
+
+class _UserProfilePageState extends State<UserProfilePage> {
+
+  final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _locationController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
@@ -16,7 +35,8 @@ class UserProfilePage extends StatelessWidget {
           child: StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('users')
-                .doc('NSXjLY9oxIYKCRDOtsOO') // Replace with the user's document ID
+                .doc(
+                'N7GrFCOn0Hv8aTBwJxrQ') // Replace with the user's document ID
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -25,9 +45,14 @@ class UserProfilePage extends StatelessWidget {
                 if (userData != null) {
                   var firstName = userData['first name'] ?? '';
                   var lastName = userData['last name'] ?? '';
-                  var phoneNo = userData['phone no.'] ?? '';
+                  var phoneNo = userData['phone no'] ?? '';
                   var location = userData['location'] ?? '';
                   var email = userData['email'] ?? '';
+
+                  _nameController.text = '$firstName $lastName';
+                  _phoneController.text = phoneNo;
+                  _locationController.text = location;
+                  _emailController.text = email;
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +66,7 @@ class UserProfilePage extends StatelessWidget {
                               width: 170,
                               height: 170,
                               child: GestureDetector(
-                                onTap: (){
+                                onTap: () {
                                   // Handle profile picture upload
                                 },
                                 child: Stack(
@@ -49,7 +74,9 @@ class UserProfilePage extends StatelessWidget {
                                   children: [
                                     CircleAvatar(
                                       radius: 80,
-                                      backgroundImage: AssetImage('assets/images/profile.jpg'), // Replace with the user's profile picture
+                                      backgroundImage: AssetImage(
+                                          'assets/images/profile.jpg'),
+                                      // Replace with the user's profile picture
                                       backgroundColor: Colors.grey[300],
                                     ),
                                     Positioned(
@@ -61,10 +88,11 @@ class UserProfilePage extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           border: Border.all(
-                                            width: 4,
-                                            color: Colors.white
+                                              width: 4,
+                                              color: Colors.white
                                           ),
-                                          color: Color.fromARGB(255, 179, 179, 179),
+                                          color: Color.fromARGB(
+                                              255, 179, 179, 179),
                                         ),
                                         child: Icon(
                                           Icons.camera_alt,
@@ -88,25 +116,21 @@ class UserProfilePage extends StatelessWidget {
                                     color: Colors.black,
                                   ),
                                 ),
-                                controller: TextEditingController(
-                                  text: '$firstName $lastName',
-                                ),
+                                controller: _nameController,
                               ),
                             ),
                             ListTile(
                               title: TextField(
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  labelText: 'Phone No.',
+                                  labelText: 'Phone No',
                                   hintText: 'Enter Your Phone No.',
                                   icon: Icon(
                                     Icons.phone,
                                     color: Colors.black,
                                   ),
                                 ),
-                                controller: TextEditingController(
-                                  text: phoneNo,
-                                ),
+                                controller: _phoneController,
                               ),
                             ),
                             ListTile(
@@ -120,9 +144,7 @@ class UserProfilePage extends StatelessWidget {
                                     color: Colors.black,
                                   ),
                                 ),
-                                controller: TextEditingController(
-                                  text: location,
-                                ),
+                                controller: _locationController,
                               ),
                             ),
                             ListTile(
@@ -136,33 +158,14 @@ class UserProfilePage extends StatelessWidget {
                                     color: Colors.black,
                                   ),
                                 ),
-                                controller: TextEditingController(
-                                  text: email,
-                                ),
+                                controller: _emailController,
                               ),
                             ),
-                            Padding(padding: EdgeInsets.only(top: 50)),
-                            // ElevatedButton(
-                            //   onPressed: () {
-                            //     Navigator.pop(context);
-                            //   },
-                            //   child: Text('Back'),
-                            //   style: ElevatedButton.styleFrom(
-                            //     primary: Colors.grey[300],
-                            //     onPrimary: Colors.black,
-                            //     shape: RoundedRectangleBorder(
-                            //       borderRadius: BorderRadius.circular(10),
-                            //     ),
-                            //     padding: EdgeInsets.only(
-                            //       left: 30.0,
-                            //       right: 30.0,
-                            //     ),
-                            //   ),
-                            // ),
+                            Padding(
+                                padding: EdgeInsets.only(top: 50)
+                            ),
                             ElevatedButton(
-                              onPressed: () {
-                                // Handle update method
-                              },
+                              onPressed: _updateUserData,
                               child: Text('Update'),
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.grey[300],
@@ -194,6 +197,59 @@ class UserProfilePage extends StatelessWidget {
       ),
     );
   }
+
+  void _updateUserData() {
+    final name = _nameController.text;
+    final phone = _phoneController.text;
+    final location = _locationController.text;
+    final email = _emailController.text;
+
+    // Get the reference to the user document in Firebase
+    final userRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc('N7GrFCOn0Hv8aTBwJxrQ'); // Replace with the user's document ID
+
+    // Update the user data using the update method
+    userRef.update({
+      'email': email,
+      'first name': name,
+      'last name': '',
+      'location': location,
+      'phone no': phone,
+    }).then((_) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Success'),
+          content: Text('User details updated successfully.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }).catchError((error) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Failed to update user details.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    });
+  }
 }
 
 void _doNothing() {}
@@ -207,3 +263,5 @@ AppBar _buildAppBar() {
     ],
   );
 }
+
+

@@ -34,6 +34,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,8 +83,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         'Profile',
                         style: TextStyle(
                           fontSize: 20,
-                          // color: Colors.white,
-                          // fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -93,14 +92,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: IconButton(
                       icon: const Icon(Icons.person),
                       iconSize: 30,
-                      // color: Colors.white,
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const UserProfilePage()),
                         );
-// handle menu button press
                       },
                     ),
                   ),
@@ -126,7 +123,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             MaterialPageRoute(
                                 builder: (context) => const StatusPage()),
                           );
-// handle menu button press
                         },
                       ),
                     ),
@@ -182,7 +178,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           MaterialPageRoute(
                               builder: (context) => const report()),
                         );
-// handle menu button press
                       },
                     ),
                   ),
@@ -210,7 +205,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             MaterialPageRoute(
                                 builder: (context) => const NewsPage()),
                           );
-// handle menu button press
                         },
                       ),
                     ),
