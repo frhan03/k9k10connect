@@ -1,35 +1,35 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../staffdrawer.dart';
 
+import '../staffdrawer.dart';
 
 class NewsStaffPage extends StatelessWidget {
   const NewsStaffPage({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: _buildAppBar(),
       drawer: MyStaffDrawer(),
-      body: buildContainer(),
+      body: buildContainer(context),
     );
   }
 
-  AppBar buildAppBar() {
+  AppBar _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
       leading: IconButton(
         icon: Icon(Icons.menu),
         color: Colors.black,
-        onPressed: () {
-
-        },
+        onPressed: () {},
       ),
       title: Text('News'),
       centerTitle: true,
-      titleTextStyle:
-      TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      titleTextStyle: TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.search),
@@ -38,10 +38,9 @@ class NewsStaffPage extends StatelessWidget {
         ),
       ],
     );
-
   }
 
-  Container buildContainer() {
+  Container buildContainer(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(24.0),
       child: Column(
@@ -51,57 +50,103 @@ class NewsStaffPage extends StatelessWidget {
             child: TextButton.icon(
               icon: Icon(Icons.add),
               onPressed: () {
-
+                // Navigate to the CreateNews screen
               },
               label: Text('Create'),
             ),
           ),
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('news').snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
 
-          ListTile(
-            leading: Image.asset('assets/images/Screenshot1.png'),
-            title: Text("Make sure to clean your room"),
-            textColor: Colors.black,
-            subtitle: Text("23/1/2023"),
-            tileColor: Colors.grey[300],
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Map<String, dynamic> data =
+                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                  Timestamp? timestamp = data['timestamp'];
+
+                  DateTime dateTime;
+                  String formattedDate;
+
+                  if (timestamp != null) {
+                    dateTime = timestamp.toDate();
+                  } else {
+                    dateTime = DateTime.now();
+                  }
+
+                  formattedDate =
+                      '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+
+                  return ListTile(
+                    leading: Image.asset('assets/images/Screenshot1.png'),
+                    title: Text(data['title']),
+                    subtitle: Text(data['description']),
+                    textColor: Colors.black,
+                    tileColor: Colors.grey[300],
+                    trailing: Text(formattedDate),
+                    onTap: () {
+                      _showDeleteConfirmationDialog(
+                          context, snapshot.data!.docs[index].id);
+                    },
+                  );
+                },
+              );
+            },
           ),
-          Divider(),
-          ListTile(
-            leading: Image.asset('assets/images/Screenshot1.png'),
-            title: Text("Maintenance is coming"),
-            textColor: Colors.black,
-            subtitle: Text("21/1/2023"),
-            tileColor: Colors.grey[300],
-          ),
-          Divider(),
-          ListTile(
-            leading: Image.asset('assets/images/Screenshot1.png'),
-            title: Text("Maintenance is coming"),
-            textColor: Colors.black,
-            subtitle: Text("21/1/2023"),
-            tileColor: Colors.grey[300],
-          ),
-          Divider(),
-          ListTile(
-            leading: Image.asset('assets/images/Screenshot1.png'),
-            title: Text("Make sure to clean your room"),
-            textColor: Colors.black,
-            subtitle: Text("23/1/2023"),
-            tileColor: Colors.grey[300],
-          ),
-          Divider(),
-          ListTile(
-            leading: Image.asset('assets//images/Screenshot1.png'),
-            title: Text("Maintenance is coming"),
-            textColor: Colors.black,
-            subtitle: Text("21/1/2023"),
-            tileColor: Colors.grey[300],
-          ),
-          //Image: image(AssetImage('Screenshot (1).png')),
-          //Text("Make sure to clean your room\n"),
-          //Subtitle("23/1/2023"),
         ],
       ),
-      //decoration: BoxDecoration(color: Colors.blueGrey),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context, String documentId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete News'),
+          content: Text('Are you sure you want to delete?'),
+          actions: <Widget>[
+             TextButton(
+              child: Text('Yes'),
+              onPressed: () {
+                _deleteNewsItem(documentId);
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+           
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteNewsItem(String documentId) {
+    FirebaseFirestore.instance.collection('news').doc(documentId).delete();
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      centerTitle: true,
+      title: Text('News'),
+      actions: <Widget>[
+        IconButton(onPressed: null, icon: Icon(Icons.notifications)),
+      ],
     );
   }
 }
