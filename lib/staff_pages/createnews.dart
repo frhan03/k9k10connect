@@ -1,28 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-//import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/drawer.dart';
 import 'package:k9k10connect/storage_service.dart';
 
 class CreateNews extends StatefulWidget {
   CreateNews({Key? key}) : super(key: key);
-  //const CreateNews ({Key? key}) : super(key: key);
 
   @override
   CreateNewsInsertState createState() => CreateNewsInsertState();
 }
 
 class CreateNewsInsertState extends State<CreateNews> {
-  var titleController = new TextEditingController();
-  var descController = new TextEditingController();
+  var titleController = TextEditingController();
+  var descController = TextEditingController();
+
   @override
   void dispose() {
     titleController.dispose();
     descController.dispose();
+    super.dispose();
   }
-
-  //final databaseRef = FirebaseDatabase.instance.reference();
 
   @override
   Widget build(BuildContext context) {
@@ -40,41 +38,45 @@ class CreateNewsInsertState extends State<CreateNews> {
             child: Text(
               'Create news ',
               style: TextStyle(
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: Colors.black),
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+                color: Colors.black,
+              ),
             ),
           ),
           Container(
             margin: _margin(),
             padding: EdgeInsets.symmetric(),
             child: TextFormField(
-                controller: titleController,
-                enableInteractiveSelection:
-                    false, // will disable paste operation
-                keyboardType: TextInputType.text,
-                validator: (val) => val!.isEmpty ? 'Invalid ' : null,
-                decoration: kinputDecoration('Title', null)),
+              controller: titleController,
+              enableInteractiveSelection: false,
+              keyboardType: TextInputType.text,
+              validator: (val) => val!.isEmpty ? 'Invalid' : null,
+              decoration: kinputDecoration('Title', null),
+            ),
           ),
           Container(
             margin: _margin(),
             child: TextFormField(
               controller: descController,
-              enableInteractiveSelection: false, // will disable paste operation
+              enableInteractiveSelection: false,
               keyboardType: TextInputType.text,
-              validator: (val) => val!.isEmpty ? 'Invalid ' : null,
+              validator: (val) => val!.isEmpty ? 'Invalid' : null,
               decoration: InputDecoration(
-                  labelText: 'Description',
-                  fillColor: Colors.white,
-                  filled: true,
-                  contentPadding: const EdgeInsets.only(left: 10, bottom: 150),
-                  border: const OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(4)),
-                      borderSide: BorderSide(
-                          color: Colors.black,
-                          width: 1,
-                          style: BorderStyle.solid))),
+                labelText: 'Description',
+                fillColor: Colors.white,
+                filled: true,
+                contentPadding: const EdgeInsets.only(left: 10, bottom: 150),
+                border: const OutlineInputBorder(
+                  borderRadius: const BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(
+                    color: Colors.black,
+                    width: 1,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+              ),
             ),
           ),
           Row(
@@ -97,9 +99,6 @@ class CreateNewsInsertState extends State<CreateNews> {
                   }
                   final path = results.files.single.path!;
                   final fileName = results.files.single.name;
-                  // print(path);
-                  // print(fileName);
-
                   storage
                       .uploadFile(path, fileName)
                       .then((value) => print('Done'));
@@ -120,8 +119,11 @@ class CreateNewsInsertState extends State<CreateNews> {
             child: ElevatedButton(
               onPressed: () {
                 createNews(
-                    titleController.text.trim(), descController.text.trim());
-                Navigator.pop(context);
+                        titleController.text.trim(), descController.text.trim())
+                    .then((_) {
+                  deleteFormData(); // Call the delete function after posting
+                  Navigator.pop(context);
+                });
               },
               child: Text('POST'),
               style: ElevatedButton.styleFrom(
@@ -142,60 +144,38 @@ class CreateNewsInsertState extends State<CreateNews> {
     );
   }
 
-  Future createNews(String title, String description) async {
+  Future<void> createNews(String title, String description) async {
     await FirebaseFirestore.instance.collection('news').add({
       'title': title,
       'description': description,
     });
   }
 
-//   void insertData(String title, String description) {
-//     databaseRef.child("path").set({
-//       'title': title,
-//       'description': description,
-//     });
-//     titleController.clear();
-//     descController.clear();
-//   }
-// }
-
-// class News {
-//   String id;
-//   String title;
-//   String description;
-//   News({
-//     this.id = "",
-//     required this.title,
-//     required this.description,
-//   });
-
-//   Map<String, dynamic> toJson() => {
-//         'id': id,
-//         'title': title,
-//         'description': description,
-//       };
-// }
+  Future<void> deleteFormData() async {
+    titleController.clear();
+    descController.clear();
+  }
 
   InputDecoration kinputDecoration(String label, SuffixIcon) {
     return InputDecoration(
-        //labelStyle: TextStyle(fontSize: 20),
-        suffixIcon: SuffixIcon,
-        labelText: label,
-        fillColor: Colors.white,
-        filled: true,
-        contentPadding: const EdgeInsets.all(15),
-        border: const OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
-            borderSide: BorderSide(
-                color: Colors.black, width: 1, style: BorderStyle.solid)));
+      suffixIcon: SuffixIcon,
+      labelText: label,
+      fillColor: Colors.white,
+      filled: true,
+      contentPadding: const EdgeInsets.all(15),
+      border: const OutlineInputBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(4)),
+        borderSide: BorderSide(
+          color: Colors.black,
+          width: 1,
+          style: BorderStyle.solid,
+        ),
+      ),
+    );
   }
 
   EdgeInsetsGeometry _margin() {
     return EdgeInsets.only(left: 20, right: 20, top: 10);
-  }
-
-  EdgeInsetsGeometry _padding() {
-    return EdgeInsets.only(left: 20, top: 20);
   }
 
   AppBar _buildAppBar() {
