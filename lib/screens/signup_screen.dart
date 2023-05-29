@@ -32,13 +32,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> addUserDetails(
       String firstName, String lastName, String phoneNo, String email) async {
-    await FirebaseFirestore.instance.collection('users').add({
-      'first name': firstName,
-      'last name': lastName,
-      'phone no.': phoneNo,
-      'email': email,
-    });
-  }
+        // Get the current user from FirebaseAuth
+        User? user = FirebaseAuth.instance.currentUser;
+
+        if (user != null){
+          // Get the UID of the current user
+          String uid = user.uid;
+          await FirebaseFirestore.instance.collection('users').doc(uid).set({
+            'uid': uid,
+            'first name': firstName,
+            'last name': lastName,
+            'phone no.': phoneNo,
+            'email': email,
+          });
+        }
+      }
 
   @override
   Widget build(BuildContext context) {
@@ -107,31 +115,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 signInSignUpButton(
                   context,
                   false,
-                  () {
+                  () async {
                     // authenticate user
                     if (passwordConfirmed()) {
-                      FirebaseAuth.instance
+                      try {
+                        UserCredential userCredential = await FirebaseAuth.instance
                           .createUserWithEmailAndPassword(
-                        email: _emailTextController.text.trim(),
-                        password: _passwordTextController.text.trim(),
-                      )
-                          .then((value) {
-                        // Navigate to the homepage
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => Homepage()),
+                          email: _emailTextController.text.trim(),
+                          password: _passwordTextController.text.trim(),
                         );
-                      }).catchError((error) {
-                        print("Error: ${error.toString()}");
-                      });
 
-                      // add user details
-                      addUserDetails(
-                        _firstNameController.text.trim(),
-                        _lastNameController.text.trim(),
-                        _phoneNoController.text.trim(),
-                        _emailTextController.text.trim(),
-                      );
+                        // Get the created user
+                        User? user = userCredential.user;
+                        if (user != null){
+                          // add user details
+                          await addUserDetails(
+                            _firstNameController.text.trim(),
+                            _lastNameController.text.trim(),
+                            _phoneNoController.text.trim(),
+                            _emailTextController.text.trim(),
+                          );
+
+                          // Navigate to the homepage
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => Homepage()),
+                          );
+                        }
+                      } catch(error) {
+                        print("Error: ${error.toString()}");
+                      }
                     }
                   },
                 ),

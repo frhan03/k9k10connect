@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:k9k10connect/drawer.dart';
@@ -15,6 +16,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   final _phoneController = TextEditingController();
   final _locationController = TextEditingController();
   final _emailController = TextEditingController();
+  late String _currentUserId;
 
   @override
   void dispose() {
@@ -23,6 +25,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
     _locationController.dispose();
     _emailController.dispose();
     super.dispose();
+  }
+
+  @override void initState(){
+    super.initState();
+    final currentUser = FirebaseAuth.instance.currentUser;
+    _currentUserId = currentUser?.uid ?? '';
   }
 
   Widget build(BuildContext context) {
@@ -35,8 +43,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           child: StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('users')
-                .doc(
-                'N7GrFCOn0Hv8aTBwJxrQ') // Replace with the user's document ID
+                .doc(_currentUserId) // Replace with the user's document ID
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -45,7 +52,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 if (userData != null) {
                   var firstName = userData['first name'] ?? '';
                   var lastName = userData['last name'] ?? '';
-                  var phoneNo = userData['phone no'] ?? '';
+                  var phoneNo = userData['phone no.'] ?? '';
                   var location = userData['location'] ?? '';
                   var email = userData['email'] ?? '';
 
@@ -207,7 +214,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
     // Get the reference to the user document in Firebase
     final userRef = FirebaseFirestore.instance
         .collection('users')
-        .doc('N7GrFCOn0Hv8aTBwJxrQ'); // Replace with the user's document ID
+        .doc(_currentUserId); // Replace with the user's document ID
+
+        // .doc('N7GrFCOn0Hv8aTBwJxrQ'); // Replace with the user's document ID
 
     // Update the user data using the update method
     userRef.update({
