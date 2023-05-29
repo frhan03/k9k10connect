@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/staff_pages/createnews.dart';
 
 import '../staffdrawer.dart';
 
@@ -50,7 +51,11 @@ class NewsStaffPage extends StatelessWidget {
             child: TextButton.icon(
               icon: Icon(Icons.add),
               onPressed: () {
-                // Navigate to the CreateNews screen
+                Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateNews()),
+                          );
               },
               label: Text('Create'),
             ),

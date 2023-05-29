@@ -6,6 +6,7 @@ import 'package:k9k10connect/pages/report.dart';
 import 'package:k9k10connect/pages/newspage.dart';
 import 'package:k9k10connect/pages/profile.dart';
 import 'package:k9k10connect/pages/status.dart';
+import 'package:k9k10connect/staff_pages/newspage_staff.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -203,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const NewsPage()),
+                                builder: (context) => const NewsStaffPage()),
                           );
                         },
                       ),

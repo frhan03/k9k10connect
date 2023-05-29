@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/drawer.dart';
-import 'package:k9k10connect/storage_service.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class CreateNews extends StatefulWidget {
   CreateNews({Key? key}) : super(key: key);
@@ -12,19 +14,23 @@ class CreateNews extends StatefulWidget {
 }
 
 class CreateNewsInsertState extends State<CreateNews> {
-  var titleController = TextEditingController();
-  var descController = TextEditingController();
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _descController = TextEditingController();
+  GlobalKey<FormState> key = GlobalKey();
+  CollectionReference _reference = FirebaseFirestore.instance.collection('news');
+
+  String imageUrl = '';
+
 
   @override
   void dispose() {
-    titleController.dispose();
-    descController.dispose();
+    _titleController.dispose();
+    _descController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final Storage storage = Storage();
     return Scaffold(
       appBar: _buildAppBar(),
       drawer: MyDrawer(),
@@ -49,7 +55,7 @@ class CreateNewsInsertState extends State<CreateNews> {
             margin: _margin(),
             padding: EdgeInsets.symmetric(),
             child: TextFormField(
-              controller: titleController,
+              controller: _titleController,
               enableInteractiveSelection: false,
               keyboardType: TextInputType.text,
               validator: (val) => val!.isEmpty ? 'Invalid' : null,
@@ -59,7 +65,7 @@ class CreateNewsInsertState extends State<CreateNews> {
           Container(
             margin: _margin(),
             child: TextFormField(
-              controller: descController,
+              controller: _descController,
               enableInteractiveSelection: false,
               keyboardType: TextInputType.text,
               validator: (val) => val!.isEmpty ? 'Invalid' : null,
@@ -84,24 +90,42 @@ class CreateNewsInsertState extends State<CreateNews> {
             children: [
               OutlinedButton.icon(
                 onPressed: () async {
-                  final results = await FilePicker.platform.pickFiles(
-                    allowMultiple: false,
-                    type: FileType.custom,
-                    allowedExtensions: ['png', 'jpg'],
-                  );
-                  if (results == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('No file selected'),
-                      ),
-                    );
-                    return null;
-                  }
-                  final path = results.files.single.path!;
-                  final fileName = results.files.single.name;
-                  storage
-                      .uploadFile(path, fileName)
-                      .then((value) => print('Done'));
+                  //Step 1:Pick image/
+                    //Install image_picker
+                    //Import the corresponding library
+
+                    ImagePicker imagePicker = ImagePicker();
+                    XFile? file =
+                        await imagePicker.pickImage(source: ImageSource.gallery);
+                    print('${file?.path}');
+
+                    if (file == null) return;
+                    //Import dart:core
+                    String uniqueFileName =
+                        DateTime.now().millisecondsSinceEpoch.toString();
+
+                    //Step 2: Upload to Firebase storage/
+                    //Install firebase_storage
+                    //Import the library
+
+                    //Get a reference to storage root
+                    Reference referenceRoot = FirebaseStorage.instance.ref();
+                    Reference referenceDirImages =
+                        referenceRoot.child('news');
+
+                    //Create a reference for the image to be stored
+                    Reference referenceImageToUpload =
+                        referenceDirImages.child('');
+
+                    //Handle errors/success
+                    try {
+                      //Store the file
+                      await referenceImageToUpload.putFile(File(file!.path));
+                      //Success: get the download URL
+                      imageUrl = await referenceImageToUpload.getDownloadURL();
+                    } catch (error) {
+                      //Some error occurred
+                    }
                 },
                 icon: Icon(
                   color: Colors.brown,
@@ -117,13 +141,26 @@ class CreateNewsInsertState extends State<CreateNews> {
           Padding(
             padding: const EdgeInsets.only(left: 270),
             child: ElevatedButton(
-              onPressed: () {
-                createNews(
-                        titleController.text.trim(), descController.text.trim())
-                    .then((_) {
+              onPressed: () async{
+                if(imageUrl.isEmpty){
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please upload an image')));
+                return;
+                }
+               // if(key.currentState!.validate()){
+                  String title = _titleController.text;
+                  String description = _descController.text;
+
+                  //create a map of data
+                  Map<String, String> dataToSend = {
+                    'title': title,
+                    'decription': description,
+                    'image': imageUrl,
+                 };
+                  //ADD A NEW ITEM
+                  _reference.add(dataToSend);
                   deleteFormData(); // Call the delete function after posting
                   Navigator.pop(context);
-                });
+                //}
               },
               child: Text('POST'),
               style: ElevatedButton.styleFrom(
@@ -152,8 +189,8 @@ class CreateNewsInsertState extends State<CreateNews> {
   }
 
   Future<void> deleteFormData() async {
-    titleController.clear();
-    descController.clear();
+    _titleController.clear();
+    _descController.clear();
   }
 
   InputDecoration kinputDecoration(String label, SuffixIcon) {
@@ -184,7 +221,4 @@ class CreateNewsInsertState extends State<CreateNews> {
       title: Text('News'),
       actions: <Widget>[
         IconButton(onPressed: null, icon: Icon(Icons.notifications)),
-      ],
-    );
-  }
-}
+     ],);}}
