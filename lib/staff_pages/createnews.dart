@@ -115,7 +115,7 @@ class CreateNewsInsertState extends State<CreateNews> {
 
                     //Create a reference for the image to be stored
                     Reference referenceImageToUpload =
-                        referenceDirImages.child('');
+                        referenceDirImages.child('name');
 
                     //Handle errors/success
                     try {
