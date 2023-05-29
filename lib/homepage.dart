@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/drawer.dart';
@@ -9,7 +10,7 @@ import 'package:k9k10connect/pages/status.dart';
 import 'package:k9k10connect/staff_pages/newspage_staff.dart';
 
 class Homepage extends StatelessWidget {
-  const Homepage({super.key});
+  const Homepage({Key? key});
 
   // This widget is the root of your application.
   @override
@@ -26,7 +27,7 @@ class Homepage extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -35,6 +36,48 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late User? currentUser;
+  String? displayName; 
+
+  @override
+  void initState(){
+    super.initState();
+    getCurrentUser();
+    getUserDisplayName();
+  }
+
+  void getCurrentUser() {
+    User? user = FirebaseAuth.instance.currentUser;
+    print('Current user: $user');
+    setState(() {
+      currentUser = user;
+    });
+  }
+
+  void getUserDisplayName() async{
+    print('Fetching display name');
+    if (currentUser != null) {
+      String uid = currentUser!.uid;
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      String? firstName = snapshot.data()?['first name'];
+      String? lastName = snapshot.data()?['last name'];
+      String? displayName = '$firstName $lastName';
+      setState(() {
+        this.displayName = displayName;
+        print('Updated display name: $displayName');
+      });
+    }
+  }
+
+  void signOut() async {
+    await FirebaseAuth.instance.signOut();
+    getCurrentUser();
+    Navigator.push(
+      context, 
+      MaterialPageRoute(builder: (context) => const SignInScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () => FirebaseAuth.instance.signOut().then((value) {
-              print("Signed out");
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SignInScreen()),
-              );
-            }),
+            onPressed: () => signOut(),
           ),
         ],
       ),
@@ -59,9 +96,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Center(
+          Center(
             child: Text(
-              'Hello! \nNur Amirah',
+              'Hello! \n${displayName ?? ""}',
               style: TextStyle(
                 fontSize: 65,
                 fontWeight: FontWeight.bold,
