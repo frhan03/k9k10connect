@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/pages/report.dart';
-import 'package:k9k10connect/pages/status.dart';
-import 'package:k9k10connect/homepage.dart';
-import 'package:k9k10connect/staff_pages/createnews.dart';
+import 'package:k9k10connect/staff_pages/newspage_staff.dart';
+import 'package:k9k10connect/staff_pages/status_staff.dart';
+import 'package:k9k10connect/staffhomepage.dart';
 import 'pages/profile.dart';
-import 'pages/newspage.dart';
 
-class MyDrawer extends StatelessWidget {
+class MyDrawer extends StatelessWidget{
   const MyDrawer({Key? key}) : super(key: key);
 
   @override
@@ -16,9 +15,7 @@ class MyDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           const UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.grey,
-            ),
+            decoration: BoxDecoration(color: Colors.grey,),
             accountName: Text(
               "Nur Amirah",
               style: TextStyle(
@@ -26,13 +23,14 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
             accountEmail: Text(
-              "nuramirah123@utm.my",
+              "amirah@gmail.com",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             currentAccountPicture: FlutterLogo(),
           ),
+
           ListTile(
             leading: Icon(
               Icons.home,
@@ -41,7 +39,8 @@ class MyDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Homepage()),
+                MaterialPageRoute(
+                    builder: (context) => const StaffHomepage()),
               );
             },
           ),
@@ -66,7 +65,8 @@ class MyDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const StatusPage()),
+                MaterialPageRoute(
+                    builder: (context) => const StatusStaffPage()),
               );
             },
           ),
@@ -78,7 +78,8 @@ class MyDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const report()),
+                MaterialPageRoute(
+                    builder: (context) => const report()),
               );
             },
           ),
@@ -90,7 +91,8 @@ class MyDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CreateNews()),
+                MaterialPageRoute(
+                    builder: (context) => NewsStaffPage()),
               );
             },
           ),
@@ -98,4 +100,5 @@ class MyDrawer extends StatelessWidget {
       ),
     );
   }
+
 }

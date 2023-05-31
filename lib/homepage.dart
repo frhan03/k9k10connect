@@ -78,7 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
       MaterialPageRoute(builder: (context) => const SignInScreen()),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,7 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         'Report',
                         style: TextStyle(
                           //color: Colors.white,
-                          //fontWeight: FontWeight.bold,
+//fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
                       ),
@@ -241,7 +240,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const NewsStaffPage()),
+                                builder: (context) => NewsStaffPage()),
                           );
                         },
                       ),

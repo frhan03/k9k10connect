@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:k9k10connect/drawer.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
+import '../staffdrawer.dart';
+import 'newspage_staff.dart';
 
 class CreateNews extends StatefulWidget {
   CreateNews({Key? key}) : super(key: key);
@@ -33,7 +35,7 @@ class CreateNewsInsertState extends State<CreateNews> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      drawer: MyDrawer(),
+      drawer: MyStaffDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -112,7 +114,6 @@ class CreateNewsInsertState extends State<CreateNews> {
                     Reference referenceRoot = FirebaseStorage.instance.ref();
                     Reference referenceDirImages =
                         referenceRoot.child('news');
-
                     //Create a reference for the image to be stored
                     Reference referenceImageToUpload =
                         referenceDirImages.child('name');
@@ -141,7 +142,8 @@ class CreateNewsInsertState extends State<CreateNews> {
           Padding(
             padding: const EdgeInsets.only(left: 270),
             child: ElevatedButton(
-              onPressed: () async{
+              onPressed: () async{        
+
                 if(imageUrl.isEmpty){
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please upload an image')));
                 return;
@@ -159,7 +161,8 @@ class CreateNewsInsertState extends State<CreateNews> {
                   //ADD A NEW ITEM
                   _reference.add(dataToSend);
                   deleteFormData(); // Call the delete function after posting
-                  Navigator.pop(context);
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => NewsStaffPage()));
                 //}
               },
               child: Text('POST'),

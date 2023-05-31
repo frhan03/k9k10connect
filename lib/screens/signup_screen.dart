@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:k9k10connect/homepage.dart';
 
 import '../reusable/reusable_widgets.dart';
+import '../staffhomepage.dart';
 import '../utils/colors_utils.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -117,7 +117,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   false,
                   () async {
                     // authenticate user
-                    if (passwordConfirmed()) {
+if (passwordConfirmed()) {
                       try {
                         UserCredential userCredential = await FirebaseAuth.instance
                           .createUserWithEmailAndPassword(
@@ -139,7 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           // Navigate to the homepage
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => Homepage()),
+                            MaterialPageRoute(builder: (context) => const StaffHomepage()),
                           );
                         }
                       } catch(error) {

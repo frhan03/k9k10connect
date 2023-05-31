@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/screens/signup_screen.dart';
-import '../homepage.dart';
 import '../reusable/reusable_widgets.dart';
+import '../staffhomepage.dart';
 import '../utils/colors_utils.dart';
 
 
@@ -55,7 +55,7 @@ class _SignInScreenState extends State<SignInScreen> {
           .then((value) {
             Navigator.push(context,
               MaterialPageRoute(
-                  builder: (context) => const Homepage()));
+                  builder: (context) => const StaffHomepage()));
           }).onError((error, stackTrace){
             print("Error ${error.toString()}");
           });  

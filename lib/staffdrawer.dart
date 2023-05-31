@@ -17,13 +17,13 @@ class MyStaffDrawer extends StatelessWidget{
           const UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: Colors.grey,),
             accountName: Text(
-              "Shila",
+              "Nur Amirah",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             accountEmail: Text(
-              "Shila@utm.my",
+              "amirah@gmail.com",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -92,7 +92,7 @@ class MyStaffDrawer extends StatelessWidget{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const NewsStaffPage()),
+                    builder: (context) => NewsStaffPage()),
               );
             },
           ),

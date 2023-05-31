@@ -1,119 +1,86 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/staff_pages/createnews.dart';
-
 import '../staffdrawer.dart';
 
 class NewsStaffPage extends StatelessWidget {
-  const NewsStaffPage({Key? key}) : super(key: key);
+   NewsStaffPage({Key? key}) : super(key: key){
+    _stream = _reference.snapshots();
+  }
+
+  CollectionReference _reference = FirebaseFirestore.instance.collection('news');
+
+  //_reference.get()  ---> returns Future<QuerySnapshot>
+  //_reference.snapshots()--> Stream<QuerySnapshot> -- realtime updates
+  late Stream<QuerySnapshot> _stream;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
       drawer: MyStaffDrawer(),
-      body: buildContainer(context),
-    );
-  }
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _stream,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          //Check error
+          if (snapshot.hasError) {
+            return Center(child: Text('Some error occurred ${snapshot.error}'));
+          }
 
-  AppBar _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: Icon(Icons.menu),
-        color: Colors.black,
-        onPressed: () {},
-      ),
-      title: Text('News'),
-      centerTitle: true,
-      titleTextStyle: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.search),
-          color: Colors.black,
-          onPressed: () {},
-        ),
-      ],
-    );
-  }
+          //Check if data arrived
+          if (snapshot.hasData) {
+            //get the data
+            QuerySnapshot querySnapshot = snapshot.data;
+            List<QueryDocumentSnapshot> documents = querySnapshot.docs;
 
-  Container buildContainer(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(24.0),
-      child: Column(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topRight,
-            child: TextButton.icon(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CreateNews()),
-                          );
-              },
-              label: Text('Create'),
-            ),
-          ),
-          StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('news').snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
+            //Convert the documents to Maps
+            List<Map> items = documents.map((e) => e.data() as Map).toList();
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              }
-
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data!.docs.length,
+            //Display the list
+            return ListView.builder(
+                itemCount: items.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Map<String, dynamic> data =
-                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  Timestamp? timestamp = data['timestamp'];
-
-                  DateTime dateTime;
-                  String formattedDate;
-
-                  if (timestamp != null) {
-                    dateTime = timestamp.toDate();
-                  } else {
-                    dateTime = DateTime.now();
-                  }
-
-                  formattedDate =
-                      '${dateTime.day}/${dateTime.month}/${dateTime.year}';
-
+                  //Get the item at this index
+                  Map thisItem = items[index];
+                  //REturn the widget for the list items
                   return ListTile(
-                    leading: Image.asset('assets/images/Screenshot1.png'),
-                    title: Text(data['title']),
-                    subtitle: Text(data['description']),
+                    title: Text('${thisItem['title']}'),
+                    subtitle: Text('${thisItem['decription']}'),
                     textColor: Colors.black,
                     tileColor: Colors.grey[300],
-                    trailing: Text(formattedDate),
+                    // trailing: Text(formattedDate),
+                    leading: Container(
+                      height: 80,
+                      width: 80,
+                      child: thisItem.containsKey('image') ? Image.network(
+                          '${thisItem['image']}') : Container(),
+                    ),
                     onTap: () {
-                      _showDeleteConfirmationDialog(
-                          context, snapshot.data!.docs[index].id);
-                    },
+                        _showDeleteConfirmationDialog(
+                            context, snapshot.data!.docs[index].id);
+                      },
                   );
-                },
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
+                });
+          }
 
-  void _showDeleteConfirmationDialog(BuildContext context, String documentId) {
+          //Show loader
+          return Center(child: CircularProgressIndicator());
+        },
+      ), //Display a list // Add a FutureBuilder
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => CreateNews()));
+        },
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ),
+      
+    );
+    
+  }
+}
+void _showDeleteConfirmationDialog(BuildContext context, String documentId) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -145,13 +112,10 @@ class NewsStaffPage extends StatelessWidget {
     FirebaseFirestore.instance.collection('news').doc(documentId).delete();
   }
 
-  AppBar buildAppBar() {
+    AppBar _buildAppBar() {
     return AppBar(
       centerTitle: true,
       title: Text('News'),
       actions: <Widget>[
         IconButton(onPressed: null, icon: Icon(Icons.notifications)),
-      ],
-    );
-  }
-}
+     ],);}
