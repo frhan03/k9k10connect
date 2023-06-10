@@ -1,5 +1,12 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/drawer.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as Path;
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class report extends StatefulWidget {
   const report({Key? key}) : super(key: key);
@@ -10,12 +17,65 @@ class report extends StatefulWidget {
 
 class _reportState extends State<report> {
   String? _categoryValue;
+  String imageUrl = '';
+  var _location;
+  var _description;
+  String status = "New";
+  TextEditingController _locationController = TextEditingController();
+  TextEditingController _descController = TextEditingController();
 
+  Future getImage() async{
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    if(pickedFile != null){
+        setState(() {
+          imageUrl = pickedFile.path;
+        });
+        File imageFile = File(pickedFile.path);
+        String uploadedImageUrl = await uploadImageToFirebase(imageFile);
+        setState(() {
+          imageUrl = uploadedImageUrl;
+        });
+      }
+  }
+  Future<void>createReport(String location, String category, String description, String imageUrl, DateTime createAt, String status) async{
+    //get the current user from firebase auth
+    User? user = FirebaseAuth.instance.currentUser;
+    if(user!= null){
+      String uid = user.uid;
+      await FirebaseFirestore.instance.collection('report').add({
+        'uid' : uid,
+        'location' : location,
+        'category' : category,
+        'description' : description,
+        'image' : imageUrl,
+        'createdAt' : createAt,
+        'status' : status,
+      });
+    }
+  }
+  Future<String> uploadImageToFirebase(File imageFile) async{
+    String fileName = Path.basename(imageFile.path);
+    Reference firebaseStorageRef = FirebaseStorage.instance.ref().child('report_images/$fileName');
+    UploadTask uploadTask = firebaseStorageRef.putFile(imageFile);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String imageUrl = await taskSnapshot.ref.getDownloadURL();
+    return imageUrl;
+  }
+  void deleteFormData(){
+    setState(() {
+      _locationController.text ='';
+      _descController.text='';
+      imageUrl = '';
+      _categoryValue ='';
+
+    });
+}
   void _submitReport() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          contentPadding: const EdgeInsets.all(20.0),
           content: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -48,8 +108,10 @@ class _reportState extends State<report> {
           ),
           ListTile(
             title: TextField(
+              controller: _locationController,
               decoration: InputDecoration(
                 hintText: 'Enter location',
+                border: OutlineInputBorder(),
               ),
             ),
           ),
@@ -121,8 +183,10 @@ class _reportState extends State<report> {
           ),
           ListTile(
             title: TextField(
+              controller: _descController,
               decoration: InputDecoration(
                 hintText: 'Enter description',
+                border: OutlineInputBorder(),
               ),
             ),
           ),
@@ -134,17 +198,38 @@ class _reportState extends State<report> {
               children: [
                 Expanded(
                   child: TextButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      getImage();
+                    },
                     icon: Icon(Icons.attach_file),
                     label: Text('Add file'),
                   ),
                 ),
+                if(imageUrl.isNotEmpty)
+                  Image.file(File(imageUrl)),
               ],
             ),
           ),
           ListTile(
             title: ElevatedButton(
-              onPressed: _submitReport,
+              onPressed: () async{
+                if(imageUrl.isEmpty){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Please upload an image')));
+                  return;
+                }
+
+                String location = _locationController.text;
+                String description = _descController.text;
+                DateTime createdAt = DateTime.now();
+                String? category = _categoryValue;
+                String status = "New";
+                await createReport(location, category!, description, imageUrl, createdAt, status);
+                deleteFormData();
+                _submitReport();
+                Navigator.of(context).pop();
+              },
+
               child: Text('Submit'),
             ),
           ),
