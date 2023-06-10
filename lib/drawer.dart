@@ -4,6 +4,7 @@ import 'package:k9k10connect/staff_pages/newspage_staff.dart';
 import 'package:k9k10connect/staff_pages/status_staff.dart';
 import 'package:k9k10connect/staffhomepage.dart';
 import 'pages/profile.dart';
+import 'pages/viewReport.dart';
 
 class MyDrawer extends StatelessWidget{
   const MyDrawer({Key? key}) : super(key: key);
@@ -79,7 +80,7 @@ class MyDrawer extends StatelessWidget{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const report()),
+                    builder: (context) => ViewReport()),
               );
             },
           ),
