@@ -9,36 +9,6 @@ _ViewReportState createState() => _ViewReportState();
 }
 
 class _ViewReportState extends State<ViewReport> {
-Future<void> deleteReport(String reportId) async {
-await FirebaseFirestore.instance.collection('report').doc(reportId).delete();
-}
-
-Future<void> confirmDeleteReport(String reportId) async {
-showDialog(
-context: context,
-builder: (BuildContext context) {
-return AlertDialog(
-title: Text('Confirm Delete'),
-content: Text('Are you sure you want to delete this report?'),
-actions: <Widget>[
-TextButton(
-child: Text('Yes'),
-onPressed: () async {
-await deleteReport(reportId);
-Navigator.of(context).pop();
-},
-),
-TextButton(
-child: Text('No'),
-onPressed: () {
-Navigator.of(context).pop();
-},
-),
-],
-);
-},
-);
-}
 
 @override
 Widget build(BuildContext context) {
@@ -76,10 +46,7 @@ final reports = snapshot.data!.docs;
                 ],
               ),
               leading: Image.network(imageUrl),
-              trailing: IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () => confirmDeleteReport(reportId),
-              ),
+             
             );
           },
         );
