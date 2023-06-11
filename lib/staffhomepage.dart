@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/drawer.dart';
-import 'package:k9k10connect/screens/signin_screen.dart';
-import 'package:k9k10connect/pages/report.dart';
-import 'package:k9k10connect/pages/newspage.dart';
 import 'package:k9k10connect/pages/profile.dart';
 import 'package:k9k10connect/pages/status.dart';
+import 'package:k9k10connect/screens/signin_screen.dart';
 import 'package:k9k10connect/staff_pages/newspage_staff.dart';
+
+import 'pages/viewReport.dart';
 
 class StaffHomepage extends StatelessWidget {
   const StaffHomepage({Key? key});
@@ -37,10 +37,10 @@ class MyStaffHomePage extends StatefulWidget {
 
 class _MyStaffHomePageState extends State<MyStaffHomePage> {
   late User? currentUser;
-  String? displayName; 
+  String? displayName;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     getCurrentUser();
     getUserDisplayName();
@@ -54,12 +54,12 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
     });
   }
 
-  void getUserDisplayName() async{
+  void getUserDisplayName() async {
     print('Fetching display name');
     if (currentUser != null) {
       String uid = currentUser!.uid;
       DocumentSnapshot<Map<String, dynamic>> snapshot =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
       String? firstName = snapshot.data()?['first name'];
       String? lastName = snapshot.data()?['last name'];
       String? displayName = '$firstName $lastName';
@@ -74,10 +74,11 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
     await FirebaseAuth.instance.signOut();
     getCurrentUser();
     Navigator.push(
-      context, 
+      context,
       MaterialPageRoute(builder: (context) => const SignInScreen()),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +115,7 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
                   Container(
                     width: MediaQuery.of(context).size.width / 2.5,
                     height: 150,
-                    color: Color.fromARGB(255, 211, 214, 227),   
+                    color: Color.fromARGB(255, 211, 214, 227),
                     child: const Center(
                       child: Text(
                         'Profile',
@@ -158,7 +159,7 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const StatusPage()),
+                                builder: (context) => StatusPage()),
                           );
                         },
                       ),
@@ -170,7 +171,7 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
                           style: TextStyle(
                             fontSize: 20,
                             //color: Colors.white,
-                           // fontWeight: FontWeight.bold,
+                            // fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -212,8 +213,7 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => const report()),
+                          MaterialPageRoute(builder: (context) => ViewReport()),
                         );
                       },
                     ),
