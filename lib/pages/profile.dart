@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:k9k10connect/drawer.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -11,12 +15,12 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
-
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _locationController = TextEditingController();
   final _emailController = TextEditingController();
   late String _currentUserId;
+  File? imageUrl;
 
   @override
   void dispose() {
@@ -27,10 +31,23 @@ class _UserProfilePageState extends State<UserProfilePage> {
     super.dispose();
   }
 
-  @override void initState(){
+  @override
+  void initState() {
     super.initState();
     final currentUser = FirebaseAuth.instance.currentUser;
     _currentUserId = currentUser?.uid ?? '';
+  }
+
+  void pickUploadImage() async {
+    final image = await ImagePicker().getImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        imageUrl = File(image.path);
+      });
+
+      _uploadImage();
+    }
   }
 
   Widget build(BuildContext context) {
@@ -47,7 +64,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                var userData = snapshot.data!.data() as Map<String, dynamic>?;
+                var userData =
+                snapshot.data!.data() as Map<String, dynamic>?;
 
                 if (userData != null) {
                   var firstName = userData['first name'] ?? '';
@@ -73,18 +91,17 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               width: 170,
                               height: 170,
                               child: GestureDetector(
-                                onTap: () {
-                                  // Handle profile picture upload
-                                },
+                                onTap: pickUploadImage,
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [
                                     CircleAvatar(
                                       radius: 80,
-                                      backgroundImage: AssetImage(
-                                          'assets/images/profile.jpg'),
-                                      // Replace with the user's profile picture
-                                      backgroundColor: Colors.grey[300],
+                                      backgroundImage: imageUrl != null
+                                          ? FileImage(imageUrl!)
+                                          : userData['profileImage'] != null
+                                          ? NetworkImage(userData['profileImage'])
+                                          : AssetImage('path_to_placeholder_image') as ImageProvider<Object>,
                                     ),
                                     Positioned(
                                       bottom: 0,
@@ -96,10 +113,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                           shape: BoxShape.circle,
                                           border: Border.all(
                                               width: 4,
-                                              color: Colors.white
-                                          ),
-                                          color: Color.fromARGB(
-                                              255, 179, 179, 179),
+                                              color: Colors.white),
+                                          color:
+                                          Color.fromARGB(255, 179, 179, 179),
                                         ),
                                         child: Icon(
                                           Icons.camera_alt,
@@ -168,9 +184,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 controller: _emailController,
                               ),
                             ),
-                            Padding(
-                                padding: EdgeInsets.only(top: 50)
-                            ),
+                            Padding(padding: EdgeInsets.only(top: 50)),
                             ElevatedButton(
                               onPressed: _updateUserData,
                               child: Text('Update'),
@@ -186,7 +200,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 ),
                               ),
                             ),
-
                           ],
                         ),
                       ),
@@ -215,8 +228,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     final userRef = FirebaseFirestore.instance
         .collection('users')
         .doc(_currentUserId); // Replace with the user's document ID
-
-        // .doc('N7GrFCOn0Hv8aTBwJxrQ'); // Replace with the user's document ID
 
     // Update the user data using the update method
     userRef.update({
@@ -259,6 +270,93 @@ class _UserProfilePageState extends State<UserProfilePage> {
       );
     });
   }
+
+
+  void _uploadImage() async {
+    if (imageUrl == null) return;
+
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) return;
+
+      final storageRef = FirebaseStorage.instance.ref().child('users').child(userId);
+      final uploadTask = storageRef.putFile(imageUrl!);
+      final snapshot = await uploadTask.whenComplete(() => null);
+
+      if (snapshot.state == TaskState.success) {
+        final imageUrl = await storageRef.getDownloadURL();
+
+        // Update the user document with the new image URL
+        FirebaseFirestore.instance.collection('users').doc(userId).update({
+          'profileImage': imageUrl,
+        }).then((_) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Success'),
+              content: Text('Profile picture updated successfully.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }).catchError((error) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Error'),
+              content: Text('Failed to update profile picture.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        });
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to upload profile picture.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('An error occurred while uploading the profile picture.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 }
 
 void _doNothing() {}
@@ -272,5 +370,3 @@ AppBar _buildAppBar() {
     ],
   );
 }
-
-
