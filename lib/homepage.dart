@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:k9k10connect/drawer.dart';
 import 'package:k9k10connect/screens/signin_screen.dart';
 import 'package:k9k10connect/pages/report.dart';
-import 'package:k9k10connect/pages/newspage.dart';
 import 'package:k9k10connect/pages/profile.dart';
 import 'package:k9k10connect/pages/status.dart';
 import 'package:k9k10connect/staff_pages/newspage_staff.dart';
-
-import 'pages/viewReport.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({Key? key});
@@ -161,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>  StatusPage()),
+                                builder: (context) => const StatusPage()),
                           );
                         },
                       ),
@@ -216,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ViewReport()),
+                              builder: (context) => const report()),
                         );
                       },
                     ),
