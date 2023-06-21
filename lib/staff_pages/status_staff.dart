@@ -99,7 +99,7 @@ Widget build(BuildContext context) {
                   title: Text('Location: ${widget.report['location']}'),
                 ),
                 ListTile(
-                  title: Text('Category: ${widget.report['category']}'),
+                  title: Text('Civil Damage: ${widget.report['category']}'),
                 ),
                 ListTile(
                   title: Text('Description: ${widget.report['description']}'),
@@ -129,12 +129,12 @@ Widget build(BuildContext context) {
                   children: [
                     ElevatedButton(
                       onPressed: _submitStatus,
-                      child: Text('In-action'),
+                      child: Text('Submit'),
                     ),
                     SizedBox(width: 10.0),
                     ElevatedButton(
                       onPressed: _finishStatus,
-                      child: Text('Resolved'),
+                      child: Text('Finish'),
                     ),
                   ],
                 ),
