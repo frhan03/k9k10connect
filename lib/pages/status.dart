@@ -110,7 +110,7 @@ Widget build(BuildContext context) {
                   title: Text('Name: $displayName'),
                   textColor: Colors.black,
                   subtitle: Text(
-                      'Location: ${report['location']} \nCategory:${report['category']} \nDescription: ${report['description']}'),
+                      'Location: ${report['location']} \nCategory Damage:${report['category']} \nDescription: ${report['description']}'),
                   isThreeLine: true,
                   tileColor: Colors.grey[300],
                   trailing: Row(
