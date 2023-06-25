@@ -15,55 +15,46 @@ class ViewReport extends StatefulWidget {
 }
 
 class _ViewReportState extends State<ViewReport> {
-  Future<void> generatePdf(List<QueryDocumentSnapshot> reports) async {
+  Future<void> generatePdf(QueryDocumentSnapshot report) async {
     final pdf = pw.Document();
 
-    for (final report in reports) {
-      final location = report['location'];
-      final category = report['category'];
-      final description = report['description'];
-      final createdAt = report['createdAt'].toDate();
-      final status = report['status'];
-      final imageUrl = report['image'];
+    final location = report['location'];
+    final category = report['category'];
+    final description = report['description'];
+    final createdAt = report['createdAt'].toDate();
+    final status = report['status'];
+    final imageUrl = report['image'];
 
-      final imageBytes = await http.readBytes(Uri.parse(imageUrl));
-      final imageProvider = pw.MemoryImage(imageBytes);
+    final imageBytes = await http.readBytes(Uri.parse(imageUrl));
+    final imageProvider = pw.MemoryImage(imageBytes);
 
-      pdf.addPage(
-        pw.MultiPage(
-          build: (context) => [
-            pw.Header(level: 0, text: 'View Report'),
-            pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Text('Location: $location'),
-                pw.Text('Category: $category'),
-                pw.Text('Description: $description'),
-                pw.Text('Created At: ${createdAt.toString()}'),
-                pw.Text('Status: $status'),
-                pw.SizedBox(height: 10),
-                pw.Image(imageProvider),
-                pw.SizedBox(height: 10),
-              ],
-            ),
-          ],
-        ),
-      );
-    }
+    pdf.addPage(
+      pw.MultiPage(
+        build: (context) => [
+          pw.Header(level: 0, text: 'View Report'),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Location: $location'),
+              pw.Text('Category: $category'),
+              pw.Text('Description: $description'),
+              pw.Text('Created At: ${createdAt.toString()}'),
+              pw.Text('Status: $status'),
+              pw.SizedBox(height: 10),
+              pw.Image(imageProvider),
+              pw.SizedBox(height: 10),
+            ],
+          ),
+        ],
+      ),
+    );
 
     final directory = await getApplicationDocumentsDirectory();
-    final filePath = '${directory.path}/reports.pdf';
+    final filePath = '${directory.path}/${report.id}.pdf';
     final file = await File(filePath).writeAsBytes(await pdf.save());
 
     // Open the PDF file
     OpenFile.open(filePath);
-  }
-
-  Future<void> deleteReport(String reportId) async {
-    await FirebaseFirestore.instance
-        .collection('report')
-        .doc(reportId)
-        .delete();
   }
 
   @override
@@ -82,15 +73,12 @@ class _ViewReportState extends State<ViewReport> {
               itemCount: reports.length,
               itemBuilder: (BuildContext context, int index) {
                 final report = reports[index];
-                final reportId = report.id;
                 final location = report['location'];
                 final category = report['category'];
                 final description = report['description'];
                 final createdAt = report['createdAt'].toDate();
                 final status = report['status'];
                 final imageUrl = report['image'];
-
-                bool canDelete = status == 'Resolved';
 
                 return ListTile(
                   title: Text('Location: $location'),
@@ -104,43 +92,12 @@ class _ViewReportState extends State<ViewReport> {
                     ],
                   ),
                   leading: Image.network(imageUrl),
-                  trailing: canDelete
-                      ? IconButton(
-                          onPressed: () async {
-                            bool deleteConfirmed = await showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Confirmation'),
-                                  content:
-                                      Text('Are you sure you want to delete?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(true); // Confirm deletion
-                                      },
-                                      child: Text('Yes'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(false); // Cancel deletion
-                                      },
-                                      child: Text('No'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-
-                            if (deleteConfirmed == true) {
-                              await deleteReport(reportId); // Delete the report
-                            }
-                          },
-                          icon: Icon(Icons.delete),
-                        )
-                      : null,
+                  trailing: IconButton(
+                    onPressed: () async {
+                      await generatePdf(report);
+                    },
+                    icon: Icon(Icons.download),
+                  ),
                 );
               },
             );
@@ -151,30 +108,14 @@ class _ViewReportState extends State<ViewReport> {
           }
         },
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () async {
-              final querySnapshot =
-                  await FirebaseFirestore.instance.collection('report').get();
-              final reports = querySnapshot.docs.toList();
-
-              await generatePdf(reports);
-            },
-            child: Icon(Icons.picture_as_pdf),
-          ),
-          SizedBox(height: 16),
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => report()),
-              );
-            },
-            child: Icon(Icons.add),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => report()),
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
