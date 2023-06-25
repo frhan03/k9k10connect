@@ -84,8 +84,14 @@ Widget build(BuildContext context) {
 
         final reports = snapshot.data!.docs;
 
-        return ListView.builder(
+        return ListView.separated(
           itemCount: reports.length,
+          separatorBuilder: (BuildContext context, index){
+            return Container(
+              height: 2,
+              color: Colors.transparent,
+            );
+          },
           itemBuilder: (context, index) {
             final report = reports[index].data() as Map<String, dynamic>;
             String uid = report['uid'];

@@ -86,6 +86,12 @@ Widget build(BuildContext context) {
 
         final reports = snapshot.data!.docs;
 
+        if(reports.isEmpty){
+          return Center(
+            child: Text('No reports found'),
+          );
+        }
+
         return ListView.builder(
           itemCount: reports.length,
           itemBuilder: (context, index) {

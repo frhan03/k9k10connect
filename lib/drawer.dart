@@ -3,9 +3,6 @@ import 'package:k9k10connect/homepage.dart';
 import 'package:k9k10connect/pages/newspage.dart';
 import 'package:k9k10connect/pages/report.dart';
 import 'package:k9k10connect/pages/status.dart';
-import 'package:k9k10connect/staff_pages/newspage_staff.dart';
-import 'package:k9k10connect/staff_pages/status_staff.dart';
-import 'package:k9k10connect/staffhomepage.dart';
 import 'pages/profile.dart';
 import 'pages/viewReport.dart';
 
