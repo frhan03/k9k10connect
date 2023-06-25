@@ -5,13 +5,61 @@ import 'package:k9k10connect/staff_pages/createnews.dart';
 import '../staffdrawer.dart';
 import 'newsdetail_staff.dart';
 
-class NewsStaffPage extends StatelessWidget {
-   NewsStaffPage({Key? key}) : super(key: key){
-    _stream = _reference.snapshots();
+class NewsStaffPage extends StatefulWidget {
+  NewsStaffPage({Key? key}) : super(key: key);
+
+  @override
+  State<NewsStaffPage> createState() => _NewsStaffPageState();
+}
+
+class _NewsStaffPageState extends State<NewsStaffPage> {
+  TextEditingController _searchController = TextEditingController();
+  List _allResults = [];
+  List _resultList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+    getNewsStream();
   }
 
-  CollectionReference _reference = FirebaseFirestore.instance.collection('news');
-  late Stream<QuerySnapshot> _stream;
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  _onSearchChanged() {
+    print(_searchController.text);
+    searchResultList();
+  }
+
+  searchResultList() {
+    var showResults = [];
+    if (_searchController.text != "") {
+      for (var newsSnapShot in _allResults) {
+        var title = newsSnapShot['title'].toString().toLowerCase();
+        if (title.contains(_searchController.text.toLowerCase())) {
+          showResults.add(newsSnapShot);
+        }
+      }
+    } else {
+      showResults = List.from(_allResults);
+    }
+    setState(() {
+      _resultList = showResults;
+    });
+  }
+
+  getNewsStream() async {
+    var data = await FirebaseFirestore.instance.collection('news').get();
+    setState(() {
+      _allResults = data.docs;
+      _resultList = List.from(_allResults);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,29 +67,30 @@ class NewsStaffPage extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorSchemeSeed: Color(0xff6750a4), 
-        useMaterial3: true
+        colorSchemeSeed: Color(0xff6750a4),
+        useMaterial3: true,
       ),
       home: Scaffold(
-      appBar: _buildAppBar(),
-      drawer: MyStaffDrawer(),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _stream,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Some error occurred ${snapshot.error}'));
-          }
-
-          //Check if data arrived
-          if (snapshot.hasData) {
-            //get the data
-            List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
-            List<Map<String, dynamic>> items =
-                documents.map((e) => e.data() as Map<String, dynamic>).toList();
-
-            //Display the list
-            return ListView.separated(
-                itemCount: items.length,
+        appBar: _buildAppBar(),
+        drawer: MyStaffDrawer(),
+        body: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(15.0),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Search Here",
+                ),
+                onChanged: (query) {
+                  searchResultList();
+                },
+              ),
+            ),
+            Expanded(
+              child: ListView.separated(
+                itemCount: _resultList.length,
                 separatorBuilder: (BuildContext context, int index) {                      
                   // custom divider using Container
                   return Container(
@@ -50,12 +99,12 @@ class NewsStaffPage extends StatelessWidget {
                   );
                 },
                 itemBuilder: (BuildContext context, int index) {
-                  Map<String, dynamic> thisItem = items[index];
+                  Map<String, dynamic> thisItem = _resultList[index].data();
                   DateTime? createdAt = thisItem['createdAt']?.toDate();
                   String formattedDate = createdAt != null
                       ? DateFormat('dd/MM/yyyy  HH:mm').format(createdAt)
                       : 'N/A';
-                  //REturn the widget for the list items
+
                   return ListTile(
                     contentPadding: EdgeInsets.only(
                       left: 20,
@@ -63,63 +112,62 @@ class NewsStaffPage extends StatelessWidget {
                       right: 10,
                       bottom: 5,
                     ),
-                    title: Text('${thisItem['title']}'),
-                    subtitle: Text('$formattedDate'),
+                    title: Text(thisItem['title']),
+                    subtitle: Text(formattedDate),
                     textColor: Colors.black,
                     tileColor: Colors.grey[200],
-                    // trailing: Text(formattedDate),
                     leading: Container(
                       height: 80,
                       width: 80,
-                      child: thisItem.containsKey('image') ? Image.network(
-                          '${thisItem['image']}') : Container(),
+                      child: thisItem.containsKey('image')
+                          ? Image.network(thisItem['image'])
+                          : Container(),
                     ),
                     trailing: Icon(Icons.chevron_right),
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => NewsDetailStaffPage(
-                              newsData: thisItem,
-                              formattedDate: formattedDate,
-                              documentId: documents[index].id,
-                              )
+                          builder: (context) => NewsDetailStaffPage(
+                            newsData: thisItem,
+                            formattedDate: formattedDate,
+                            documentId: _resultList[index].id,
                           ),
+                        ),
                       );
                     },
                   );
-                });
-                
-          }
-
-          //Show loader
-          return Center(child: CircularProgressIndicator());
-        },
-      ), //Display a list // Add a FutureBuilder
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => CreateNews()));
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100)
+                },
+              ),
+            ),
+          ],
         ),
-        backgroundColor: Color.fromARGB(255, 232, 208, 180),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => CreateNews(),
+              ),
+            );
+          },
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+          ),
+          backgroundColor: Color.fromARGB(255, 232, 208, 180),
+        ),
       ),
-      
-    )
     );
-    
-    
   }
 }
 
-    AppBar _buildAppBar() {
-    return AppBar(
-      centerTitle: true,
-      title: Text('News'),
-      actions: <Widget>[
-        IconButton(onPressed: null, icon: Icon(Icons.notifications)),
-     ],);}
+AppBar _buildAppBar() {
+  return AppBar(
+    centerTitle: true,
+    title: Text('News'),
+    actions: <Widget>[
+      IconButton(onPressed: () {}, icon: Icon(Icons.notifications)),
+    ],
+  );
+}
