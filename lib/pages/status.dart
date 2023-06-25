@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:k9k10connect/staff_pages/status_staff.dart';
+import 'package:k9k10connect/drawer.dart';
 
 class StatusPage extends StatelessWidget {
   const StatusPage({Key? key}) : super(key: key);
@@ -68,158 +68,91 @@ class _MyStatusPageState extends State<MyStatusPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('report').snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: buildAppBar(),
+    drawer: MyDrawer(),
+    body: StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+              .collection('report')
+              .where('uid', isEqualTo: currentUser?.uid)
+              .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-          final reports = snapshot.data!.docs;
+        final reports = snapshot.data!.docs;
 
-          return ListView.builder(
-            itemCount: reports.length,
-            itemBuilder: (context, index) {
-              final report = reports[index].data() as Map<String, dynamic>;
-              String uid = report['uid'];
+        if(reports.isEmpty){
+          return Center(
+            child: Text('No reports found'),
+          );
+        }
 
-              return FutureBuilder<String>(
-                future: getDisplayNameFromUID(uid),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return ListTile(
-                      title: Text('Loading...'),
-                    );
-                  }
+        return ListView.builder(
+          itemCount: reports.length,
+          itemBuilder: (context, index) {
+            final report = reports[index].data() as Map<String, dynamic>;
+            String uid = report['uid'];
 
-                  if (snapshot.hasError) {
-                    return ListTile(
-                      title: Text('Error occurred.'),
-                    );
-                  }
-
-                  String displayName = snapshot.data ?? '';
-
+            return FutureBuilder<String>(
+              future: getDisplayNameFromUID(uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return ListTile(
-                    title: Text('Name: $displayName'),
-                    textColor: Colors.black,
-                    subtitle: Text(
-                        'Location: ${report['location']} \nCategory Damage:${report['category']} \nDescription: ${report['description']}'),
-                    isThreeLine: true,
-                    tileColor: Colors.grey[300],
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: 100.0,
-                          height: 50.0,
-                          child: Card(
-                            color: _getStatusColor(report['status']),
-                            child: Center(
-                              child: Text(
-                                report['status'],
-                                style: TextStyle(
-                                  color: _getStatusTextColor(report['status']),
-                                ),
+                    title: Text('Loading...'),
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  return ListTile(
+                    title: Text('Error occurred.'),
+                  );
+                }
+
+                String displayName = snapshot.data ?? '';
+
+                return ListTile(
+                  title: Text('Name: $displayName'),
+                  textColor: Colors.black,
+                  subtitle: Text(
+                      'Location: ${report['location']} \nCategory Damage:${report['category']} \nDescription: ${report['description']}'),
+                  isThreeLine: true,
+                  tileColor: Colors.grey[300],
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 100.0,
+                        height: 50.0,
+                        child: Card(
+                          color: _getStatusColor(report['status']),
+                          child: Center(
+                            child: Text(
+                              report['status'],
+                              style: TextStyle(
+                                color: _getStatusTextColor(report['status']),
                               ),
                             ),
                           ),
                         ),
-                        IconButton(
-                          onPressed: () async {
-                            if (report['status'] == 'Resolved') {
-                              bool deleteConfirmed = await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('Confirmation'),
-                                    content: Text(
-                                        'Are you sure you want to delete?'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(true); // Confirm deletion
-                                        },
-                                        child: Text('Yes'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(false); // Cancel deletion
-                                        },
-                                        child: Text('No'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-
-                              if (deleteConfirmed == true) {
-                                // Delete the report
-                                FirebaseFirestore.instance
-                                    .collection('report')
-                                    .doc(reports[index].id)
-                                    .delete();
-                              }
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('Cannot Delete'),
-                                    content: Text(
-                                        'You can only delete when it is resolved.'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
-                                        },
-                                        child: Text('OK'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                          },
-                          icon: Icon(Icons.delete),
-                        ),
-                      ],
-                    ),
-                    onTap: () async {
-                      final updatedReport = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => StatusStaffPage(
-                            report: report,
-                            displayName: displayName,
-                          ),
-                        ),
-                      );
-                      if (updatedReport != null) {
-                        // Update the report with the returned updated report
-                        FirebaseFirestore.instance
-                            .collection('report')
-                            .doc(reports[index].id)
-                            .update(updatedReport);
-                      }
-                    },
-                  );
-                },
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
+                      ),
+                    ],
+                  ),
+                  onTap: () async {},
+                );
+              },
+            );
+          },
+        );
+      },
+    ),
+  );
+}
+   
 
   Color _getStatusColor(String status) {
     switch (status) {
