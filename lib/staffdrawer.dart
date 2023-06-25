@@ -67,7 +67,7 @@ class MyStaffDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const StatusStaffPage(displayName: '', report: {},)),
+                    builder: (context) => const StatusStaffPage()),
               );
             },
           ),

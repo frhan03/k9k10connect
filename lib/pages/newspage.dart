@@ -1,140 +1,109 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:k9k10connect/drawer.dart';
+import 'package:k9k10connect/pages/newsDetailPage.dart';
 
 class NewsPage extends StatelessWidget {
-  const NewsPage({Key? key}) : super(key: key);
+   NewsPage({Key? key}) : super(key: key){
+    _stream = _reference.snapshots();
+  }
+
+  CollectionReference _reference = FirebaseFirestore.instance.collection('news');
+  late Stream<QuerySnapshot> _stream;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorSchemeSeed: Color(0xff6750a4), 
+        useMaterial3: true
+      ),
+      home: Scaffold(
       appBar: _buildAppBar(),
-      body: buildContainer(context),
       drawer: MyDrawer(),
-    );
-  }
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _stream,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Some error occurred ${snapshot.error}'));
+          }
 
-  AppBar _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: Icon(Icons.menu),
-        color: Colors.black,
-        onPressed: () {},
-      ),
-      title: Text('News'),
-      centerTitle: true,
-      titleTextStyle: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.search),
-          color: Colors.black,
-          onPressed: () {},
-        ),
-      ],
-    );
-  }
+          //Check if data arrived
+          if (snapshot.hasData) {
+            //get the data
+            List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+            List<Map<String, dynamic>> items =
+                documents.map((e) => e.data() as Map<String, dynamic>).toList();
 
-  Container buildContainer(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(24.0),
-      child: Column(
-        children: <Widget>[
-          StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('news').snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
-
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              }
-
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Map<String, dynamic> data =
-                      snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  Timestamp? timestamp = data['timestamp'];
-
-                  DateTime dateTime;
-                  String formattedDate;
-
-                  if (timestamp != null) {
-                    dateTime = timestamp.toDate();
-                  } else {
-                    dateTime = DateTime.now();
-                  }
-
-                  formattedDate =
-                      '${dateTime.day}/${dateTime.month}/${dateTime.year}';
-
-                  return ListTile(
-                    leading: Image.asset('assets/images/Screenshot1.png'),
-                    title: Text(data['title']),
-                    subtitle: Text(data['description']),
-                    textColor: Colors.black,
-                    tileColor: Colors.grey[300],
-                    trailing: Text(formattedDate),
-                    onTap: () {
-                      _showDeleteConfirmationDialog(
-                          context, snapshot.data!.docs[index].id);
-                    },
+            //Display the list
+            return ListView.separated(
+                itemCount: items.length,
+                separatorBuilder: (BuildContext context, int index) {                      
+                  // custom divider using Container
+                  return Container(
+                    height: 2,
+                    color: Colors.transparent,
                   );
                 },
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
+                itemBuilder: (BuildContext context, int index) {
+                  Map<String, dynamic> thisItem = items[index];
+                  DateTime? createdAt = thisItem['createdAt']?.toDate();
+                  String formattedDate = createdAt != null
+                      ? DateFormat('dd/MM/yyyy  HH:mm').format(createdAt)
+                      : 'N/A';
+                  //REturn the widget for the list items
+                  return ListTile(
+                    contentPadding: EdgeInsets.only(
+                      left: 20,
+                      top: 5,
+                      right: 10,
+                      bottom: 5,
+                    ),
+                    title: Text('${thisItem['title']}'),
+                    subtitle: Text('$formattedDate'),
+                    textColor: Colors.black,
+                    tileColor: Colors.grey[200],
+                    // trailing: Text(formattedDate),
+                    leading: Container(
+                      height: 80,
+                      width: 80,
+                      child: thisItem.containsKey('image') ? Image.network(
+                          '${thisItem['image']}') : Container(),
+                    ),
+                    trailing: Icon(Icons.chevron_right),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NewsDetailPage(
+                              newsData: thisItem,
+                              formattedDate: formattedDate,
+                              documentId: documents[index].id,
+                              )
+                          ),
+                      );
+                    },
+                  );
+                });
+                
+          }
 
-  void _showDeleteConfirmationDialog(BuildContext context, String documentId) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Delete News'),
-          content: Text('Are you sure you want to delete?'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Yes'),
-              onPressed: () {
-                _deleteNewsItem(documentId);
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+          //Show loader
+          return Center(child: CircularProgressIndicator());
+        },
+      ), //Display a list // Add a FutureBuilder
+    )
+    );    
   }
+}
 
-  void _deleteNewsItem(String documentId) {
-    FirebaseFirestore.instance.collection('news').doc(documentId).delete();
-  }
-
-  AppBar buildAppBar() {
+    AppBar _buildAppBar() {
     return AppBar(
       centerTitle: true,
       title: Text('News'),
       actions: <Widget>[
         IconButton(onPressed: null, icon: Icon(Icons.notifications)),
-      ],
-    );
-  }
-}
+     ],);}

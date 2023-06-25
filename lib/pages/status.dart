@@ -2,7 +2,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/drawer.dart';
-import 'package:k9k10connect/staff_pages/status_staff.dart';
 
 class StatusPage extends StatelessWidget {
   const StatusPage({Key? key}) : super(key: key);
@@ -72,8 +71,12 @@ class _MyStatusPageState extends State<MyStatusPage> {
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: buildAppBar(),
+    drawer: MyDrawer(),
     body: StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('report').snapshots(),
+      stream: FirebaseFirestore.instance
+              .collection('report')
+              .where('uid', isEqualTo: currentUser?.uid)
+              .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -131,62 +134,9 @@ Widget build(BuildContext context) {
                           ),
                         ),
                       ),
-                      IconButton(
-                        onPressed: () async {
-                          bool deleteConfirmed = await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Confirmation'),
-                                content: Text('Are you sure you want to delete?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop(true); // Confirm deletion
-                                    },
-                                    child: Text('Yes'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop(false); // Cancel deletion
-                                    },
-                                    child: Text('No'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-
-                          if (deleteConfirmed == true) {
-                            // Delete the report
-                            FirebaseFirestore.instance
-                                .collection('report')
-                                .doc(reports[index].id)
-                                .delete();
-                          }
-                        },
-                        icon: Icon(Icons.delete),
-                      ),
                     ],
                   ),
-                  onTap: () async {
-                    final updatedReport = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StatusStaffPage(
-                          report: report,
-                          displayName: displayName,
-                        ),
-                      ),
-                    );
-                    if (updatedReport != null) {
-                      // Update the report with the returned updated report
-                      FirebaseFirestore.instance
-                          .collection('report')
-                          .doc(reports[index].id)
-                          .update(updatedReport);
-                    }
-                  },
+                  onTap: () async {},
                 );
               },
             );

@@ -1,5 +1,8 @@
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/homepage.dart';
 import 'package:k9k10connect/screens/signup_screen.dart';
 import '../reusable/reusable_widgets.dart';
 import '../staffhomepage.dart';
@@ -53,9 +56,10 @@ class _SignInScreenState extends State<SignInScreen> {
             email: _emailTextController.text, 
             password: _passwordTextController.text)
           .then((value) {
-            Navigator.push(context,
-              MaterialPageRoute(
-                  builder: (context) => const StaffHomepage()));
+            route();
+            // Navigator.push(context,
+            //   MaterialPageRoute(
+            //       builder: (context) => const StaffHomepage()));
           }).onError((error, stackTrace){
             print("Error ${error.toString()}");
           });  
@@ -88,7 +92,28 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-
-
-
+  void route(){
+    User? user = FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance
+    .collection('users')
+    .doc(user!.uid)
+    .get()
+    .then((DocumentSnapshot documentSnapshot){
+      if (documentSnapshot.exists){
+        if (documentSnapshot.get('role') == "Staff"){
+          Navigator.pushReplacement(context, 
+            MaterialPageRoute(
+              builder: (context) => const StaffHomepage(),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(context, 
+            MaterialPageRoute(
+              builder: (context) => const Homepage(),
+            ),
+          );
+        };
+      }
+    });
+  }
 }

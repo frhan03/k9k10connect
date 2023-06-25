@@ -1,162 +1,230 @@
+ import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:k9k10connect/drawer.dart';
+import 'package:k9k10connect/staff_pages/editstatus_staff.dart';
 
-class StatusStaffPage extends StatefulWidget {
-  final Map<String, dynamic> report;
-  final String displayName;
-
-  const StatusStaffPage({
-    required this.report,
-    required this.displayName,
-  });
+class StatusStaffPage extends StatelessWidget {
+  const StatusStaffPage({Key? key}) : super(key: key);
 
   @override
-  _StatusStaffPageState createState() => _StatusStaffPageState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(colorSchemeSeed: Color(0xFFD7CCC8), useMaterial3: true),
+      home: const MyStatusStaffPage(),
+    );
+  }
 }
 
-class _StatusStaffPageState extends State<StatusStaffPage> {
-  late TextEditingController dateController;
+class MyStatusStaffPage extends StatefulWidget {
+  const MyStatusStaffPage({Key? key}) : super(key: key);
+
+  @override
+  _MyStatusStaffPageState createState() => _MyStatusStaffPageState();
+}
+
+class _MyStatusStaffPageState extends State<MyStatusStaffPage> {
+  late User? currentUser;
+  String? displayName;
 
   @override
   void initState() {
     super.initState();
-    dateController = TextEditingController();
+    getCurrentUser();
+    getUserDisplayName();
   }
 
-  @override
-  void dispose() {
-    dateController.dispose();
-    super.dispose();
+  void getCurrentUser() {
+    User? user = FirebaseAuth.instance.currentUser;
+    print('Current user: $user');
+    setState(() {
+      currentUser = user;
+    });
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null) {
-      String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+  void getUserDisplayName() async {
+    print('Fetching display name');
+    if (currentUser != null) {
+      String uid = currentUser!.uid;
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      String? firstName = snapshot.data()?['first name'];
+      String? lastName = snapshot.data()?['last name'];
+      String? displayName = '$firstName $lastName';
       setState(() {
-        dateController.text = formattedDate;
+        this.displayName = displayName;
+        print('Updated display name: $displayName');
       });
     }
   }
 
- void _submitStatus() {
-  if (widget.report['status'] != 'Resolved') {
-    // Perform action on button click
-    String selectedDate = dateController.text;
-    String status = 'In-action'; // Change the status to 'In-action'
-    // Update the status in the report
-    widget.report['status'] = status;
-    // You can perform any additional logic or API calls here
-    Navigator.of(context).pop(widget.report); // Return the updated report to the previous page
-  } else {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Invalid Action'),
-          content: Text('The status is already "Resolved".'),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+  Future<String> getDisplayNameFromUID(String uid) async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    String? firstName = snapshot.data()?['first name'];
+    String? lastName = snapshot.data()?['last name'];
+    String? displayName = '$firstName $lastName';
+    return displayName ?? '';
   }
-}
 
-@override
+  @override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: _buildAppBar(),
+    appBar: buildAppBar(),
     drawer: MyDrawer(),
-    body: Padding(
-      padding: EdgeInsets.all(15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            alignment: Alignment.center,
-            child: Column(
-              children: [
-                SizedBox(height: 20.0),
-                ListTile(
-                  title: Text('Name: ${widget.displayName}'),
-                ),
-                ListTile(
-                  title: Text('Location: ${widget.report['location']}'),
-                ),
-                ListTile(
-                  title: Text('Civil Damage: ${widget.report['category']}'),
-                ),
-                ListTile(
-                  title: Text('Description: ${widget.report['description']}'),
-                ),
-                ListTile(
-                  title: Text('Status: ${widget.report['status']}'),
-                ),
-                ListTile(
-                  title: Text('In action: ${widget.report['inAction']}'),
-                ),
-                SizedBox(
-                  child: TextField(
-                    controller: dateController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.calendar_today),
-                      labelText: "Enter Date",
-                    ),
-                    readOnly: true,
-                    onTap: () {
-                      _selectDate(context);
-                    },
+    body: StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('report').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        final reports = snapshot.data!.docs;
+
+        return ListView.builder(
+          itemCount: reports.length,
+          itemBuilder: (context, index) {
+            final report = reports[index].data() as Map<String, dynamic>;
+            String uid = report['uid'];
+
+            return FutureBuilder<String>(
+              future: getDisplayNameFromUID(uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return ListTile(
+                    title: Text('Loading...'),
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  return ListTile(
+                    title: Text('Error occurred.'),
+                  );
+                }
+
+                String displayName = snapshot.data ?? '';
+
+                return ListTile(
+                  title: Text('Name: $displayName'),
+                  textColor: Colors.black,
+                  subtitle: Text(
+                      'Location: ${report['location']} \nCategory Damage:${report['category']} \nDescription: ${report['description']}'),
+                  isThreeLine: true,
+                  tileColor: Colors.grey[300],
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 100.0,
+                        height: 50.0,
+                        child: Card(
+                          color: _getStatusColor(report['status']),
+                          child: Center(
+                            child: Text(
+                              report['status'],
+                              style: TextStyle(
+                                color: _getStatusTextColor(report['status']),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          bool deleteConfirmed = await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Confirmation'),
+                                content: Text('Are you sure you want to delete?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true); // Confirm deletion
+                                    },
+                                    child: Text('Yes'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false); // Cancel deletion
+                                    },
+                                    child: Text('No'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+                          if (deleteConfirmed == true) {
+                            // Delete the report
+                            FirebaseFirestore.instance
+                                .collection('report')
+                                .doc(reports[index].id)
+                                .delete();
+                          }
+                        },
+                        icon: Icon(Icons.delete),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: _submitStatus,
-                      child: Text('Submit'),
-                    ),
-                    SizedBox(width: 10.0),
-                    ElevatedButton(
-                      onPressed: _finishStatus,
-                      child: Text('Finish'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+                  onTap: () async {
+                    final updatedReport = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditStatusStaffPage(
+                          report: report,
+                          displayName: displayName,
+                        ),
+                      ),
+                    );
+                    if (updatedReport != null) {
+                      // Update the report with the returned updated report
+                      FirebaseFirestore.instance
+                          .collection('report')
+                          .doc(reports[index].id)
+                          .update(updatedReport);
+                    }
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
     ),
   );
 }
+   
 
-void _finishStatus() {
-  // Perform action on "Finish" button click
-  String status = 'Resolved'; // Change the status to 'Resolved'
-  // Update the status in the report
-  widget.report['status'] = status;
-  // You can perform any additional logic or API calls here
-  Navigator.of(context).pop(widget.report); // Return the updated report to the previous page
-}
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'Pending':
+        return Color.fromARGB(255, 186, 151, 139);
+      case 'In-action':
+        return Color.fromARGB(255, 68, 11, 27);
+      case 'Resolved':
+        return Color.fromARGB(180, 245, 245, 245);
+      default:
+        return Colors.grey[300]!;
+    }
+  }
 
-  AppBar _buildAppBar() {
+  Color _getStatusTextColor(String status) {
+    switch (status) {
+      case 'Pending':
+      case 'In-action':
+        return Colors.white;
+      case 'Resolved':
+        return Colors.grey;
+      default:
+        return Colors.black;
+    }
+  }
+
+  AppBar buildAppBar() {
     return AppBar(
       centerTitle: true,
       title: Text('Status'),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/homepage.dart';
+import 'package:k9k10connect/pages/newspage.dart';
 import 'package:k9k10connect/pages/report.dart';
+import 'package:k9k10connect/pages/status.dart';
 import 'package:k9k10connect/staff_pages/newspage_staff.dart';
 import 'package:k9k10connect/staff_pages/status_staff.dart';
 import 'package:k9k10connect/staffhomepage.dart';
@@ -41,7 +44,7 @@ class MyDrawer extends StatelessWidget{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const StaffHomepage()),
+                    builder: (context) => const Homepage()),
               );
             },
           ),
@@ -67,7 +70,7 @@ class MyDrawer extends StatelessWidget{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const StatusStaffPage(displayName: '', report: {},)),
+                    builder: (context) => const StatusPage()),
               );
             },
           ),
@@ -80,7 +83,7 @@ class MyDrawer extends StatelessWidget{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ViewReport()),
+                    builder: (context) => report()),
               );
             },
           ),
@@ -93,7 +96,7 @@ class MyDrawer extends StatelessWidget{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => NewsStaffPage()),
+                    builder: (context) => NewsPage()),
               );
             },
           ),
