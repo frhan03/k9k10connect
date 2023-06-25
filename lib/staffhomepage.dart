@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/drawer.dart';
 import 'package:k9k10connect/pages/profile.dart';
-import 'package:k9k10connect/pages/status.dart';
 import 'package:k9k10connect/screens/signin_screen.dart';
 import 'package:k9k10connect/staff_pages/newspage_staff.dart';
+import 'package:k9k10connect/staff_pages/status_staff.dart';
 
 import 'pages/viewReport.dart';
 
@@ -19,7 +19,6 @@ class StaffHomepage extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(colorSchemeSeed: Color(0xff6750a4), useMaterial3: true
-          // primarySwatch: Colors.blue,
           ),
       home: const MyStaffHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -84,7 +83,7 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Home'),
+        title: const Text('Staff Home'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.logout),
@@ -144,7 +143,6 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
               Container(
                 width: MediaQuery.of(context).size.width / 2.5,
                 height: 150,
-                // color: Colors.green,
                 color: Color.fromARGB(255, 201, 203, 187),
                 child: Stack(
                   children: [
@@ -153,13 +151,12 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
                       right: 55,
                       child: IconButton(
                         icon: const Icon(Icons.pending_actions),
-                        // color: Colors.white,
                         iconSize: 30,
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => StatusPage()),
+                                builder: (context) => StatusStaffPage()),
                           );
                         },
                       ),
@@ -170,8 +167,6 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
                           'Status',
                           style: TextStyle(
                             fontSize: 20,
-                            //color: Colors.white,
-                            // fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -191,14 +186,11 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
                   Container(
                     width: MediaQuery.of(context).size.width / 2.5,
                     height: 150,
-                    // color: Colors.lightBlue,
                     color: Color.fromARGB(255, 232, 208, 180),
                     child: const Center(
                       child: Text(
                         'Report',
                         style: TextStyle(
-                          //color: Colors.white,
-                          //fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
                       ),
@@ -208,7 +200,6 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
                     top: 30,
                     child: IconButton(
                       icon: const Icon(Icons.report),
-                      // color: Colors.white,
                       iconSize: 30,
                       onPressed: () {
                         Navigator.push(
@@ -223,7 +214,6 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
               Container(
                 width: MediaQuery.of(context).size.width / 2.5,
                 height: 150,
-                // color: Colors.grey,
                 color: Color.fromARGB(255, 71, 18, 42),
                 child: Stack(
                   children: [
@@ -233,9 +223,6 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
                       child: IconButton(
                         icon: const Icon(Icons.article),
                         color: Color.fromARGB(255, 201, 203, 187),
-
-                        // color: Colors.white,
-
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -251,7 +238,6 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
                           'News',
                           style: TextStyle(
                             color: Color.fromARGB(255, 201, 203, 187),
-                            // fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
                         ),
