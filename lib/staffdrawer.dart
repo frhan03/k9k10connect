@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:k9k10connect/staff_pages/newspage_staff.dart';
+import 'package:k9k10connect/staff_pages/profile_staff.dart';
 import 'package:k9k10connect/staff_pages/status_staff.dart';
 import 'package:k9k10connect/staffhomepage.dart';
 
-import 'pages/profile.dart';
 import 'pages/viewReport.dart';
 
 class MyStaffDrawer extends StatelessWidget {
@@ -20,13 +20,13 @@ class MyStaffDrawer extends StatelessWidget {
               color: Colors.grey,
             ),
             accountName: Text(
-              "Nur Amirah",
+              "",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             accountEmail: Text(
-              "amirah@gmail.com",
+              "",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -54,7 +54,7 @@ class MyStaffDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const UserProfilePage()),
+                    builder: (context) => const StaffProfilePage()),
               );
             },
           ),
@@ -67,7 +67,7 @@ class MyStaffDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const StatusStaffPage(displayName: '', report: {},)),
+                    builder: (context) => const StatusStaffPage()),
               );
             },
           ),
