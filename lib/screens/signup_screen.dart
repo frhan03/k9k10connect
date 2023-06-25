@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/screens/signin_screen.dart';
 
 import '../reusable/reusable_widgets.dart';
-import '../staffhomepage.dart';
 import '../utils/colors_utils.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -20,6 +20,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _phoneNoController = TextEditingController();
+
+  var options = [
+    'Student',
+    'Staff',
+  ];
+  var currentItemSelected = "Student";
+  var role = "Student";
 
   bool passwordConfirmed() {
     if (_passwordTextController.text.trim() ==
@@ -44,6 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             'last name': lastName,
             'phone no.': phoneNo,
             'email': email,
+            'role' : role,
           });
         }
       }
@@ -112,12 +120,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(
                   height: 20,
                 ),
+                Text(
+                  "Role : ",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                DropdownButton<String>(
+                  dropdownColor: hexStringToColor("D8BFAA"),
+                  isDense: true,
+                  isExpanded: false,
+                  iconEnabledColor: Colors.white,
+                  focusColor: Colors.white,
+                  items: options.map((String dropDownStringItem){
+                    return DropdownMenuItem<String>(
+                      value: dropDownStringItem,
+                      child: Text(
+                        dropDownStringItem,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    );
+                  }).toList(), 
+                  onChanged: (newValueSelected){
+                    setState(() {
+                      currentItemSelected = newValueSelected!;
+                      role = newValueSelected;
+                    });
+                  },
+                  value: currentItemSelected,
+                ),
                 signInSignUpButton(
                   context,
                   false,
                   () async {
                     // authenticate user
-if (passwordConfirmed()) {
+                    if (passwordConfirmed()) {
                       try {
                         UserCredential userCredential = await FirebaseAuth.instance
                           .createUserWithEmailAndPassword(
@@ -139,7 +182,7 @@ if (passwordConfirmed()) {
                           // Navigate to the homepage
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => const StaffHomepage()),
+                            MaterialPageRoute(builder: (context) => const SignInScreen()),
                           );
                         }
                       } catch(error) {
