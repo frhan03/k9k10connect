@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:k9k10connect/drawer.dart';
 import 'package:k9k10connect/pages/profile.dart';
 import 'package:k9k10connect/screens/signin_screen.dart';
 import 'package:k9k10connect/staff_pages/newspage_staff.dart';
 import 'package:k9k10connect/staff_pages/status_staff.dart';
+import 'package:k9k10connect/staffdrawer.dart';
 
 import 'pages/viewReport.dart';
 
@@ -91,7 +91,7 @@ class _MyStaffHomePageState extends State<MyStaffHomePage> {
           ),
         ],
       ),
-      drawer: MyDrawer(),
+      drawer: MyStaffDrawer(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
