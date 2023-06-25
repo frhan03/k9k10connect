@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:k9k10connect/homepage.dart';
+import 'package:k9k10connect/pages/newspage.dart';
 import 'package:k9k10connect/pages/report.dart';
-import 'package:k9k10connect/staff_pages/newspage_staff.dart';
-import 'package:k9k10connect/staff_pages/status_staff.dart';
-import 'package:k9k10connect/staffhomepage.dart';
+import 'package:k9k10connect/pages/status.dart';
 import 'pages/profile.dart';
 import 'pages/viewReport.dart';
 
@@ -18,13 +18,13 @@ class MyDrawer extends StatelessWidget{
           const UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: Colors.grey,),
             accountName: Text(
-              "Nur Amirah",
+              "",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             accountEmail: Text(
-              "amirah@gmail.com",
+              "",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -41,7 +41,7 @@ class MyDrawer extends StatelessWidget{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const StaffHomepage()),
+                    builder: (context) => const Homepage()),
               );
             },
           ),
@@ -67,7 +67,7 @@ class MyDrawer extends StatelessWidget{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const StatusStaffPage(displayName: '', report: {},)),
+                    builder: (context) => const StatusPage()),
               );
             },
           ),
@@ -80,7 +80,7 @@ class MyDrawer extends StatelessWidget{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ViewReport()),
+                    builder: (context) => report()),
               );
             },
           ),
@@ -93,7 +93,7 @@ class MyDrawer extends StatelessWidget{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => NewsStaffPage()),
+                    builder: (context) => NewsPage()),
               );
             },
           ),
