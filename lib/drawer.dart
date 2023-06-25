@@ -18,13 +18,13 @@ class MyDrawer extends StatelessWidget{
           const UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: Colors.grey,),
             accountName: Text(
-              "Nur Amirah",
+              "",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             accountEmail: Text(
-              "amirah@gmail.com",
+              "",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),

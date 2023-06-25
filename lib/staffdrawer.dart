@@ -20,13 +20,13 @@ class MyStaffDrawer extends StatelessWidget {
               color: Colors.grey,
             ),
             accountName: Text(
-              "Nur Amirah",
+              "",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             accountEmail: Text(
-              "amirah@gmail.com",
+              "",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),

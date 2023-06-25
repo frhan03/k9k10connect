@@ -57,6 +57,7 @@ class _NewsStaffPageState extends State<NewsStaffPage> {
     var data = await FirebaseFirestore.instance.collection('news').get();
     setState(() {
       _allResults = data.docs;
+      _resultList = List.from(_allResults);
     });
   }
 
