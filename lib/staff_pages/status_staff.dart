@@ -1,8 +1,9 @@
  import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:k9k10connect/drawer.dart';
 import 'package:k9k10connect/staff_pages/editstatus_staff.dart';
+
+import '../staffdrawer.dart';
 
 class StatusStaffPage extends StatelessWidget {
   const StatusStaffPage({Key? key}) : super(key: key);
@@ -72,7 +73,7 @@ class _MyStatusStaffPageState extends State<MyStatusStaffPage> {
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: buildAppBar(),
-    drawer: MyDrawer(),
+    drawer: MyStaffDrawer(),
     body: StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('report').snapshots(),
       builder: (context, snapshot) {

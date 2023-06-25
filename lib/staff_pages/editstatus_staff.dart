@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:k9k10connect/drawer.dart';
 
+import '../staffdrawer.dart';
+
 class EditStatusStaffPage extends StatefulWidget {
   final Map<String, dynamic> report;
   final String displayName;
@@ -80,7 +82,7 @@ class _EditStatusStaffPageState extends State<EditStatusStaffPage> {
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: _buildAppBar(),
-    drawer: MyDrawer(),
+    drawer: MyStaffDrawer(),
     body: Padding(
       padding: EdgeInsets.all(15.0),
       child: Column(
