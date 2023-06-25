@@ -174,7 +174,7 @@ class _MyStatusPageState extends State<MyStatusPage> {
                                   return AlertDialog(
                                     title: Text('Cannot Delete'),
                                     content: Text(
-                                        'You can only delete when  is resolved.'),
+                                        'You can only delete when it is resolved.'),
                                     actions: [
                                       TextButton(
                                         onPressed: () {
